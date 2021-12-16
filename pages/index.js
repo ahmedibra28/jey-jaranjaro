@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import withAuth from '../HOC/withAuth'
@@ -14,6 +15,7 @@ import { inputNumber, inputText } from '../utils/dynamicForm'
 import moment from 'moment'
 import {
   FaEdit,
+  FaInfoCircle,
   FaPlus,
   FaPlusCircle,
   FaTimesCircle,
@@ -373,7 +375,7 @@ function Home() {
         >
           <FaPlus className='mb-1' />
         </button>
-        <h3 className=''>Orders</h3>
+
         <Pagination data={data} setPage={setPage} />
       </div>
 
@@ -412,8 +414,13 @@ function Home() {
                       <td>{moment(order.createdAt).format('llll')}</td>
                       <td>{order.orderItems.length} items</td>
                       <td className='btn-group'>
+                        <Link href={`/orders/${order._id}`}>
+                          <a className='btn btn-success btn-sm'>
+                            <FaInfoCircle className='mb-1' /> Details
+                          </a>
+                        </Link>
                         <button
-                          className='btn btn-primary btn-sm'
+                          className='btn btn-primary btn-sm ms-1'
                           onClick={() => editHandler(order)}
                           data-bs-toggle='modal'
                           data-bs-target='#editOrderModal'

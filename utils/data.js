@@ -1,40 +1,46 @@
 export const routes = () => {
   return [
     {
-      isActive: true,
+      name: 'Home',
       menu: 'Normal',
       path: '/',
-      name: 'Home',
+      isActive: true,
     },
     {
-      isActive: true,
+      name: 'User Logs',
       menu: 'Admin',
       path: '/admin/logon',
-      name: 'User Logs',
+      isActive: true,
     },
     {
-      isActive: true,
+      name: 'Users',
       menu: 'Admin',
       path: '/admin/users',
-      name: 'Users',
+      isActive: true,
     },
     {
-      isActive: true,
+      name: 'Groups',
       menu: 'Admin',
       path: '/admin/groups',
-      name: 'Groups',
+      isActive: true,
     },
     {
-      isActive: true,
+      name: 'Routes',
       menu: 'Admin',
       path: '/admin/routes',
-      name: 'Routes',
+      isActive: true,
     },
     {
-      isActive: true,
+      name: 'Profile',
       menu: 'Profile',
       path: '/profile',
-      name: 'Profile',
+      isActive: true,
+    },
+    {
+      name: 'Search',
+      menu: 'Normal',
+      path: '/orders/search',
+      isActive: true,
     },
   ]
 }

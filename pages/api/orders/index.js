@@ -38,7 +38,6 @@ handler.get(async (req, res) => {
 
 handler.post(async (req, res) => {
   await dbConnect()
-  console.log(req.body)
 
   const { fullName, mobileNumber } = req.body.data
 

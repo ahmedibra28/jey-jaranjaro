@@ -6,7 +6,6 @@ import {
   FaSignInAlt,
   FaUserPlus,
   FaPowerOff,
-  FaBars,
 } from 'react-icons/fa'
 import { logout } from '../api/users'
 import { useMutation } from 'react-query'
@@ -153,19 +152,8 @@ const Navigation = () => {
   return (
     <nav className='navbar navbar-expand-sm navbar-light shadow-lg'>
       <div className='container'>
-        <span className='navbar-brand'>
-          {userInfo && (
-            <FaBars
-              className='mb-1 me-3'
-              data-bs-toggle='offcanvas'
-              data-bs-target='#offcanvasWithBackdrop'
-              aria-controls='offcanvasWithBackdrop'
-            />
-          )}
-        </span>
-
         <Link href='/'>
-          <a className='navbar-brand'>NEXT.js</a>
+          <a className='navbar-brand'>JJ</a>
         </Link>
 
         <button
