@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner'
 import { searchOrder } from '../../api/orders'
 import { useMutation, useQueryClient } from 'react-query'
 import moment from 'moment'
-import { FaInfoCircle } from 'react-icons/fa'
+import { FaInfoCircle, FaSearch } from 'react-icons/fa'
 
 const Search = () => {
   const [search, setSearch] = useState('')
@@ -48,7 +48,7 @@ const Search = () => {
             className='btn btn-primary input-group-text'
             id='basic-addon2'
           >
-            @example.com
+            <FaSearch className='mb-1' />
           </button>
         </div>
       </form>
