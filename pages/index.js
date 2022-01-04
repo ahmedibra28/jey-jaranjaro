@@ -26,6 +26,7 @@ function Home() {
   const [page, setPage] = useState(1)
   const [id, setId] = useState(null)
   const [edit, setEdit] = useState(false)
+  const [search, setSearch] = useState('')
   const {
     register,
     handleSubmit,
@@ -39,11 +40,17 @@ function Home() {
 
   const { data, isLoading, isError, error } = useQuery(
     'orders',
-    () => getOrders(page),
+    () => getOrders(page, search),
     {
       retry: 0,
     }
   )
+
+  const getTotal = (data) => {
+    const cost =
+      data && data.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
+    return `$${cost.toFixed(2)}`
+  }
 
   const {
     isLoading: isLoadingAdd,
@@ -60,6 +67,17 @@ function Home() {
       queryClient.invalidateQueries(['orders'])
     },
   })
+
+  const searchHandler = (e) => {
+    e.preventDefault()
+
+    const refetch = async () => {
+      await queryClient.prefetchQuery('orders')
+    }
+    if (search) {
+      refetch()
+    }
+  }
 
   const {
     isLoading: isLoadingUpdate,
@@ -367,16 +385,40 @@ function Home() {
         </div>
       </div>
 
-      <div className='d-flex justify-content-between align-items-center'>
-        <button
-          className='btn btn-primary '
-          data-bs-toggle='modal'
-          data-bs-target='#editOrderModal'
-        >
-          <FaPlus className='mb-1' />
-        </button>
+      <button
+        className='btn btn-primary position-fixed rounded-3 animate__bounceIn'
+        style={{
+          bottom: '20px',
+          right: '20px',
+        }}
+        data-bs-toggle='modal'
+        data-bs-target='#editOrderModal'
+      >
+        <FaPlus className='mb-1' />
+      </button>
 
-        <Pagination data={data} setPage={setPage} />
+      <div className='row mt-2'>
+        <div className='col-md-4 col-6 m-auto'>
+          <h3 className='fw-light font-monospace'>Orders</h3>
+        </div>
+        <div className='col-md-4 col-6 m-auto'>
+          <Pagination data={data} setPage={setPage} />
+        </div>
+
+        <div className='col-md-4 col-12 m-auto'>
+          <form onSubmit={(e) => searchHandler(e)}>
+            <input
+              type='text'
+              className='form-control py-2'
+              placeholder='Search by Passport or Email'
+              name='search'
+              value={search}
+              onChange={(e) => (setSearch(e.target.value), setPage(1))}
+              autoFocus
+              required
+            />
+          </form>
+        </div>
       </div>
 
       {isLoading ? (
@@ -394,7 +436,7 @@ function Home() {
       ) : (
         <>
           <div className='table-responsive '>
-            <table className='table table-sm hover bordered striped caption-top '>
+            <table className='table table-sm hover bordered table-striped caption-top '>
               <caption>{data && data.total} records were found</caption>
               <thead>
                 <tr>
@@ -402,6 +444,7 @@ function Home() {
                   <th>MOBILE</th>
                   <th>DATE</th>
                   <th>NO. OF ITEMS</th>
+                  <th>COST</th>
                   <th></th>
                 </tr>
               </thead>
@@ -411,25 +454,26 @@ function Home() {
                     <tr key={order._id}>
                       <td>{order.fullName}</td>
                       <td>{order.mobileNumber}</td>
-                      <td>{moment(order.createdAt).format('llll')}</td>
+                      <td>{moment(order.createdAt).format('lll')}</td>
                       <td>{order.orderItems.length} items</td>
+                      <td>{getTotal(order.orderItems)}</td>
                       <td className='btn-group'>
                         <Link href={`/orders/${order._id}`}>
-                          <a className='btn btn-success btn-sm'>
-                            <FaInfoCircle className='mb-1' /> Details
+                          <a className='btn btn-success btn-sm rounded-pill'>
+                            <FaInfoCircle />
                           </a>
                         </Link>
                         <button
-                          className='btn btn-primary btn-sm ms-1'
+                          className='btn btn-primary btn-sm rounded-pill ms-1'
                           onClick={() => editHandler(order)}
                           data-bs-toggle='modal'
                           data-bs-target='#editOrderModal'
                         >
-                          <FaEdit className='mb-1' /> Edit
+                          <FaEdit />
                         </button>
 
                         <button
-                          className='btn btn-danger btn-sm ms-1'
+                          className='btn btn-danger btn-sm rounded-pill ms-1'
                           onClick={() => deleteHandler(order._id)}
                           disabled={isLoadingDelete}
                         >
@@ -438,7 +482,7 @@ function Home() {
                           ) : (
                             <span>
                               {' '}
-                              <FaTrash className='mb-1' /> Delete
+                              <FaTrash />
                             </span>
                           )}
                         </button>

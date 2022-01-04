@@ -8,24 +8,28 @@ const handler = nc()
 handler.use(isAuth)
 handler.get(async (req, res) => {
   await dbConnect()
-  let query = Order.find()
+  console.log(req.query)
+  const mobileNumber = req.query && req.query.search
+
+  let query = Order.find(mobileNumber ? { mobileNumber } : {})
+  const total = await Order.countDocuments(mobileNumber ? { mobileNumber } : {})
 
   const page = parseInt(req.query.page) || 1
   const pageSize = parseInt(req.query.limit) || 50
   const skip = (page - 1) * pageSize
-  const total = await Order.countDocuments()
 
   const pages = Math.ceil(total / pageSize)
 
   query = query
     .skip(skip)
+    .lean()
     .limit(pageSize)
     .sort({ createdAt: -1 })
-    .populate('user', 'name')
+    .populate('user', ['name'])
 
   const result = await query
 
-  res.status(200).json({
+  res.send({
     startIndex: skip + 1,
     endIndex: skip + result.length,
     count: result.length,
