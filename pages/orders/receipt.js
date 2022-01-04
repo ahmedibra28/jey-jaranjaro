@@ -68,15 +68,10 @@ const Receipt = () => {
   }
 
   const editHandler = (order) => {
-    console.log(order)
     setId(order._id)
   }
 
   const submitHandler = (data) => {
-    console.log({
-      _id: id,
-      data,
-    })
     updateMutateAsync({
       _id: id,
       data,

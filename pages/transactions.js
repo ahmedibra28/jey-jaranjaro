@@ -133,7 +133,6 @@ const Activities = () => {
                 </tr>
               </thead>
               <tbody>
-                {console.log(data && data.data)}
                 {data &&
                   data.data.map((employee) => (
                     <tr key={employee._id}>

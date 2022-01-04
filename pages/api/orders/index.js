@@ -8,7 +8,6 @@ const handler = nc()
 handler.use(isAuth)
 handler.get(async (req, res) => {
   await dbConnect()
-  console.log(req.query)
   const mobileNumber = req.query && req.query.search
 
   let query = Order.find(mobileNumber ? { mobileNumber } : {})
