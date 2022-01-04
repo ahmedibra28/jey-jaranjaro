@@ -4,7 +4,11 @@ import User from './User'
 
 const transactionScheme = mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: User, required: true },
+    receiptBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: User,
+      required: true,
+    },
     order: { type: mongoose.Schema.Types.ObjectId, ref: Order, required: true },
     customerName: { type: String, required: true },
     customerMobile: { type: Number, required: true },

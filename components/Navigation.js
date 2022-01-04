@@ -56,7 +56,7 @@ const Navigation = () => {
   const authItems = () => {
     return (
       <>
-        <ul className='navbar-nav me-auto'>
+        <ul className='navbar-nav ms-auto'>
           {customLocalStorage() &&
             customLocalStorage().userAccessRoutes &&
             customLocalStorage().userAccessRoutes.route &&
@@ -73,8 +73,7 @@ const Navigation = () => {
                   </li>
                 )
             )}
-        </ul>
-        <ul className='navbar-nav ms-auto'>
+
           {UnlockAccess(Access.admin) && (
             <li className='nav-item dropdown'>
               <a

@@ -55,12 +55,12 @@ handler.put(async (req, res) => {
       customerMobile: obj.mobileNumber,
     })
     if (prevTrans && prevTrans.length > 0) {
-      let prevTransBalanceAmount = 0
+      // let prevTransBalanceAmount = 0
       let prevTransPaidAmount = 0
       let prevTransDiscountAmount = 0
 
       prevTrans.forEach((prev) => {
-        prevTransBalanceAmount += prev.prevAmount
+        // prevTransBalanceAmount += prev.prevAmount
         prevTransPaidAmount += prev.paidAmount
         prevTransDiscountAmount += prev.discountAmount
       })
@@ -77,7 +77,7 @@ handler.put(async (req, res) => {
         order: _id,
         customerName: obj.fullName,
         customerMobile: obj.mobileNumber,
-        user: req.user.id,
+        receiptBy: req.user.id,
       }
 
       if (currBalanceAmount < Number(receipt) + Number(discount)) {
@@ -104,7 +104,7 @@ handler.put(async (req, res) => {
         order: _id,
         customerName: obj.fullName,
         customerMobile: obj.mobileNumber,
-        user: req.user.id,
+        receiptBy: req.user.id,
       }
 
       await Transaction.create(newTransObj)

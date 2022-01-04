@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import withAuth from '../../HOC/withAuth'
 import Message from '../../components/Message'
 import Loader from 'react-loader-spinner'
-import { addOrder, receiptOrder, updateReceipt } from '../../api/orders'
+import { receiptOrder, updateReceipt } from '../../api/orders'
 import { useMutation, useQueryClient } from 'react-query'
 import moment from 'moment'
 import { FaDollarSign, FaInfoCircle, FaSearch } from 'react-icons/fa'
@@ -31,7 +31,6 @@ const Receipt = () => {
   const {
     register,
     handleSubmit,
-    setValue,
     reset,
     formState: { errors },
   } = useForm({
@@ -246,7 +245,7 @@ const Receipt = () => {
                         </button>
 
                         <Link href={`/orders/${order._id}`}>
-                          <a className='btn btn-success btn-sm rounded-pill'>
+                          <a className='btn btn-success btn-sm rounded-pill ms-1'>
                             <FaInfoCircle />
                           </a>
                         </Link>
