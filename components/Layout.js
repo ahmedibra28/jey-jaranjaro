@@ -1,5 +1,6 @@
 import Navigation from './Navigation'
 import Head from 'next/head'
+import Footer from './Footer'
 
 export default function Layout({ children }) {
   return (
@@ -9,7 +10,8 @@ export default function Layout({ children }) {
         <meta property='og:title' content='Jey Jaranjaro' key='title' />
       </Head>
       <Navigation />
-      <div className='container'>{children}</div>
+      <main className='container'>{children}</main>
+      <Footer />
     </>
   )
 }

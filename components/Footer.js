@@ -12,6 +12,7 @@ const Footer = () => {
             </a>
           </div>
         </div>
+        <div id='watermark'></div>
       </div>
     </footer>
   )

@@ -152,7 +152,7 @@ const Navigation = () => {
     <nav className='navbar navbar-expand-sm navbar-light shadow-lg'>
       <div className='container'>
         <Link href='/'>
-          <a className='navbar-brand'>JJ</a>
+          <a className='navbar-brand'>BABA JEY</a>
         </Link>
 
         <button

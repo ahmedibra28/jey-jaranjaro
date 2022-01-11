@@ -264,6 +264,7 @@ function Home() {
                         name: 'mobileNumber',
                       })}
                     </div>
+                    <hr />
                     {inputFields.map((inputField, index) => (
                       <div key={index}>
                         <div className='row '>
@@ -354,6 +355,7 @@ function Home() {
                             </div>
                           </div>
                         </div>
+                        <hr />
                       </div>
                     ))}
                     <div className='modal-footer'>
@@ -389,7 +391,7 @@ function Home() {
         className='btn btn-primary position-fixed rounded-3 animate__bounceIn'
         style={{
           bottom: '20px',
-          right: '20px',
+          right: '25px',
         }}
         data-bs-toggle='modal'
         data-bs-target='#editOrderModal'
