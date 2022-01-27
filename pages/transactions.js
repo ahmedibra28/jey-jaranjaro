@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import withAuth from '../HOC/withAuth'
 import Message from '../components/Message'
 import Loader from 'react-loader-spinner'
-import { FaFileDownload } from 'react-icons/fa'
+import { FaFileDownload, FaTrash } from 'react-icons/fa'
 import useReports from '../api/reports'
 import { CSVLink } from 'react-csv'
 import moment from 'moment'
@@ -13,10 +13,13 @@ import Pagination from '../components/Pagination'
 const Activities = () => {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
-  const { searchTransactions } = useReports(page)
+  const { searchTransactions, deleteTransaction } = useReports(page)
 
   const { isLoading, isError, error, isSuccess, mutateAsync, data } =
     searchTransactions
+
+  const { mutateAsync: deleteMutateAsync, isSuccess: isSuccessDelete } =
+    deleteTransaction
 
   const searchHandler = (e) => {
     e.preventDefault()
@@ -35,17 +38,25 @@ const Activities = () => {
       RunningBalance: `-$${(
         d.prevAmount -
         (d.paidAmount + d.discountAmount)
-      ).toFixed(2)}`,
+      ).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`,
       DateTime: moment(d.createdAt).format('lll'),
       receiptBy: d.receiptBy && d.receiptBy.name,
     }))
 
   useEffect(() => {
-    if (search) {
+    if (search || isSuccessDelete) {
       mutateAsync(search)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [page, isSuccessDelete])
+
+  const deleteHandler = (id) => {
+    deleteMutateAsync(id)
+  }
+  const lastValue = data && data.data && data.data[data.data.length - 1]
 
   return (
     <>
@@ -130,6 +141,7 @@ const Activities = () => {
                   <th>Running Balance</th>
                   <th>DateTime</th>
                   <th>Receipted</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -137,17 +149,48 @@ const Activities = () => {
                   data.data.map((employee) => (
                     <tr key={employee._id}>
                       <td>{employee.customerName}</td>
-                      <td>${employee.prevAmount.toFixed(2)}</td>
-                      <td>${employee.paidAmount.toFixed(2)}</td>
-                      <td>${employee.discountAmount.toFixed(2)}</td>
                       <td>
-                        {`-$${(
+                        $
+                        {employee.prevAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
+                      <td>
+                        $
+                        {employee.paidAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
+                      <td>
+                        $
+                        {employee.discountAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
+                      <td>
+                        {`$${(
                           employee.prevAmount -
                           (employee.paidAmount + employee.discountAmount)
-                        ).toFixed(2)}`}
+                        ).toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}`}
                       </td>
                       <td>{moment(employee.createdAt).format('lll')}</td>
                       <td>{employee.receiptBy && employee.receiptBy.name}</td>
+                      <td>
+                        {lastValue && lastValue._id === employee._id && (
+                          <button
+                            className='btn btn-danger btn-sm rounded-pill ms-1'
+                            onClick={() => deleteHandler(employee._id)}
+                          >
+                            <FaTrash />
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   ))}
               </tbody>

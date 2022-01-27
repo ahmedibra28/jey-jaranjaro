@@ -16,7 +16,16 @@ export default function useReports(page) {
     }
   )
 
+  const deleteTransaction = useMutation(
+    async (id) => await dynamicAPI('delete', `${url}/${id}`, {}),
+    {
+      retry: 0,
+      onSuccess: () => queryClient.invalidateQueries(['transactions']),
+    }
+  )
+
   return {
     searchTransactions,
+    deleteTransaction,
   }
 }

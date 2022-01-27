@@ -49,7 +49,10 @@ function Home() {
   const getTotal = (data) => {
     const cost =
       data && data.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
-    return `$${cost.toFixed(2)}`
+    return `$${cost.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`
   }
 
   const {

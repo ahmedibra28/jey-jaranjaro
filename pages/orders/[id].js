@@ -94,7 +94,10 @@ const Detail = () => {
                             (acc, cur) => acc + cur.quantity * cur.price,
                             0
                           )
-                          .toFixed(2)}
+                          .toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                       </span>
                     </div>
                   </div>{' '}
@@ -118,8 +121,23 @@ const Detail = () => {
                           <th scope='row'>{index + 1}</th>
                           <td>{item.item}</td>
                           <td>{item.quantity}</td>
-                          <td>${item.price.toFixed(2)}</td>
-                          <td>${(item.price * item.quantity).toFixed(2)}</td>
+                          <td>
+                            $
+                            {item.price.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </td>
+                          <td>
+                            $
+                            {(item.price * item.quantity).toLocaleString(
+                              undefined,
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              }
+                            )}
+                          </td>
                           <td>{item.description}</td>
                         </tr>
                       ))}
@@ -139,7 +157,10 @@ const Detail = () => {
                           $
                           {data.orderItems
                             .reduce((acc, cur) => acc + cur.price, 0)
-                            .toFixed(2)}{' '}
+                            .toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}{' '}
                         </td>
                         <td colSpan='2'>
                           $
@@ -148,7 +169,10 @@ const Detail = () => {
                               (acc, cur) => acc + cur.quantity * cur.price,
                               0
                             )
-                            .toFixed(2)}
+                            .toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
                         </td>
                       </tr>
                     </tfoot>

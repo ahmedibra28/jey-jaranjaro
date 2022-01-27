@@ -30,6 +30,7 @@ handler.post(async (req, res) => {
         )
     }
   }
+
   res.status(200).send(obj)
 })
 
@@ -96,6 +97,17 @@ handler.put(async (req, res) => {
       const currBalanceAmount = prevTotalOrderMoney
       const currPaidAmount = receipt
       const currDiscountAmount = discount
+
+      if (currBalanceAmount < Number(receipt) + Number(discount)) {
+        res
+          .status(400)
+          .send(
+            `Your can not receipt more than $${currBalanceAmount.toFixed(
+              2
+            )} for ${obj.fullName}`
+          )
+        return
+      }
 
       const newTransObj = {
         prevAmount: currBalanceAmount,
