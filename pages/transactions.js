@@ -34,13 +34,13 @@ const Activities = () => {
     return total
   }
 
-  const getBalance = (items) => {
-    console.log(items)
-    return items.reduce(
-      (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
-      0
-    )
-  }
+  // const getBalance = (items) => {
+  //   console.log(items)
+  //   return items.reduce(
+  //     (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
+  //     0
+  //   )
+  // }
 
   const forExcel =
     data &&
