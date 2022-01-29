@@ -8,30 +8,18 @@ const handler = nc()
 handler.use(isAuth)
 handler.post(async (req, res) => {
   await dbConnect()
-  const customerMobile = req.body
 
-  let query = Transaction.find(customerMobile ? { customerMobile } : {})
-  const total = await Transaction.countDocuments(
-    customerMobile ? { customerMobile } : {}
-  )
-  const page = parseInt(req.query.page) || 1
-  const pageSize = parseInt(req.query.limit) || 50
-  const skip = (page - 1) * pageSize
+  const order = req.body
 
-  const pages = Math.ceil(total / pageSize)
-
-  query = query.skip(skip).limit(pageSize).populate('receiptBy', ['name'])
-  const result = await query
-
-  res.status(200).send({
-    startIndex: skip + 1,
-    endIndex: skip + result.length,
-    count: result.length,
-    page,
-    pages,
-    total,
-    data: result,
-  })
+  const transaction = await Transaction.find({ order })
+    .populate('receiptBy', 'name')
+    .populate('order')
+    .sort({ createdAt: -1 })
+  if (transaction.length > 0) {
+    res.status(200).send(transaction)
+  } else {
+    res.status(400).send('You have not receipt any money from this order yet')
+  }
 })
 
 export default handler

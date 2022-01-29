@@ -12,7 +12,6 @@ const transactionScheme = mongoose.Schema(
     order: { type: mongoose.Schema.Types.ObjectId, ref: Order, required: true },
     customerName: { type: String, required: true },
     customerMobile: { type: Number, required: true },
-    prevAmount: { type: Number, required: true },
     paidAmount: { type: Number, required: true },
     discountAmount: { type: Number, required: true },
   },

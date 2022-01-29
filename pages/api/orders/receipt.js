@@ -16,22 +16,25 @@ handler.post(async (req, res) => {
     mobileNumber,
   }).populate('user', 'name')
 
-  const trans = await Transaction.findOne(
+  const trans = await Transaction.find(
     { customerMobile: mobileNumber },
     {},
     { sort: { createdAt: -1 } }
   ).lean()
-  if (trans) {
-    if (trans.prevAmount <= trans.paidAmount + trans.discountAmount) {
-      return res
-        .status(400)
-        .send(
-          `There is no balance to receipt for this ${mobileNumber} customer`
-        )
-    }
-  }
 
-  res.status(200).send(obj)
+  const objOrders = obj.map((o) => ({
+    _id: o._id,
+    fullName: o.fullName,
+    mobileNumber: o.mobileNumber,
+    createdAt: o.createdAt,
+    cost: o.orderItems.reduce(
+      (acc, curr) => acc + curr.quantity * curr.price,
+      0
+    ),
+    items: o.orderItems.length,
+  }))
+
+  res.status(200).send({ orders: objOrders, transactions: trans })
 })
 
 handler.put(async (req, res) => {
@@ -43,85 +46,39 @@ handler.put(async (req, res) => {
 
   const obj = await Order.findById(_id)
   if (obj) {
-    const prevOrder = await Order.find({ mobileNumber: obj.mobileNumber })
-    const prevOrderArray = prevOrder.map((prev) =>
-      prev.orderItems.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
-    )
-    const prevTotalOrderMoney = prevOrderArray.reduce(
-      (acc, curr) => acc + curr,
+    const balance = obj.orderItems.reduce(
+      (acc, curr) => acc + curr.quantity * curr.price,
       0
     )
 
-    const prevTrans = await Transaction.find({
-      customerMobile: obj.mobileNumber,
-    })
-    if (prevTrans && prevTrans.length > 0) {
-      // let prevTransBalanceAmount = 0
-      let prevTransPaidAmount = 0
-      let prevTransDiscountAmount = 0
+    const transactions = await Transaction.find({ order: _id })
+    const transBalance = transactions.reduce(
+      (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
+      0
+    )
 
-      prevTrans.forEach((prev) => {
-        // prevTransBalanceAmount += prev.prevAmount
-        prevTransPaidAmount += prev.paidAmount
-        prevTransDiscountAmount += prev.discountAmount
-      })
+    const total = Number(discount) + Number(receipt)
 
-      const currBalanceAmount =
-        prevTotalOrderMoney - (prevTransPaidAmount + prevTransDiscountAmount)
-      const currPaidAmount = receipt
-      const currDiscountAmount = discount
-
-      const newTransObj = {
-        prevAmount: currBalanceAmount,
-        paidAmount: currPaidAmount,
-        discountAmount: currDiscountAmount,
-        order: _id,
-        customerName: obj.fullName,
-        customerMobile: obj.mobileNumber,
-        receiptBy: req.user.id,
-      }
-
-      if (currBalanceAmount < Number(receipt) + Number(discount)) {
-        res
-          .status(400)
-          .send(
-            `Your can not receipt more than $${currBalanceAmount.toFixed(
-              2
-            )} for ${obj.fullName}`
-          )
-        return
-      }
-
-      await Transaction.create(newTransObj)
-    } else {
-      const currBalanceAmount = prevTotalOrderMoney
-      const currPaidAmount = receipt
-      const currDiscountAmount = discount
-
-      if (currBalanceAmount < Number(receipt) + Number(discount)) {
-        res
-          .status(400)
-          .send(
-            `Your can not receipt more than $${currBalanceAmount.toFixed(
-              2
-            )} for ${obj.fullName}`
-          )
-        return
-      }
-
-      const newTransObj = {
-        prevAmount: currBalanceAmount,
-        paidAmount: currPaidAmount,
-        discountAmount: currDiscountAmount,
-        order: _id,
-        customerName: obj.fullName,
-        customerMobile: obj.mobileNumber,
-        receiptBy: req.user.id,
-      }
-
-      await Transaction.create(newTransObj)
+    if (balance - transBalance < total) {
+      res
+        .status(400)
+        .send(
+          `Your can not receipt more than $${(balance - transBalance).toFixed(
+            2
+          )} for ${obj.fullName}`
+        )
+      return
     }
-    res.status(200).send('Done')
+
+    await Transaction.create({
+      paidAmount: receipt,
+      discountAmount: discount,
+      order: _id,
+      customerName: obj.fullName,
+      customerMobile: obj.mobileNumber,
+      receiptBy: req.user.id,
+    })
+    res.status(200).send('success')
   }
 })
 export default handler

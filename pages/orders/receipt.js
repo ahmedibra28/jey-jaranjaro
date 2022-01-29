@@ -28,6 +28,40 @@ const Receipt = () => {
     },
   })
 
+  const orders = data && data.orders
+  const transactions = data && data.transactions
+
+  // console.log(transactions && transactions)
+
+  const getBalance = (order) => {
+    const trans =
+      transactions &&
+      transactions.length > 0 &&
+      transactions.filter((t) => t.order === order)
+
+    const balance =
+      trans &&
+      trans.length > 0 &&
+      trans.reduce(
+        (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
+        0
+      )
+    return balance
+  }
+
+  const totalCosts =
+    orders &&
+    orders.length > 0 &&
+    orders.reduce((acc, curr) => acc + curr.cost, 0)
+
+  const totalBalances =
+    transactions &&
+    transactions.length > 0 &&
+    transactions.reduce(
+      (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
+      0
+    )
+
   const {
     register,
     handleSubmit,
@@ -61,14 +95,14 @@ const Receipt = () => {
     receiptMutateAsync(receipt)
   }
 
-  const getTotal = (data) => {
-    const cost =
-      data && data.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
-    return `$${cost.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`
-  }
+  // const getTotal = (data) => {
+  //   const cost =
+  //     data && data.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
+  //   return `$${cost.toLocaleString(undefined, {
+  //     minimumFractionDigits: 2,
+  //     maximumFractionDigits: 2,
+  //   })}`
+  // }
 
   const editHandler = (order) => {
     setId(order._id)
@@ -211,27 +245,37 @@ const Receipt = () => {
       ) : (
         <>
           <div className='table-responsive '>
-            <table className='table table-sm hover bordered striped caption-top '>
-              <caption>{data ? data.length : 0} records were found</caption>
+            <table className='table table-sm hover bordered table-striped caption-top'>
+              <caption>{orders ? orders.length : 0} records were found</caption>
               <thead>
                 <tr>
+                  <th>REF</th>
                   <th>CUSTOMER</th>
                   <th>MOBILE</th>
                   <th>DATE</th>
                   <th>NO. OF ITEMS</th>
                   <th>COST</th>
+                  <th>BALANCE</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {data &&
-                  data.map((order) => (
+                {orders &&
+                  orders.map((order) => (
                     <tr key={order._id}>
+                      <td>{order._id}</td>
                       <td>{order.fullName}</td>
                       <td>{order.mobileNumber}</td>
                       <td>{moment(order.createdAt).format('lll')}</td>
-                      <td>{order.orderItems.length} items</td>
-                      <td>{getTotal(order.orderItems)}</td>
+                      <td>{order.items} items</td>
+                      <td>${order.cost.toFixed(2)}</td>
+                      {/* change text color if the is a balance */}
+                      <td className='text-danger'>
+                        $
+                        {!getBalance(order._id)
+                          ? order.cost.toFixed(2)
+                          : (order.cost - getBalance(order._id)).toFixed(2)}
+                      </td>
                       <td className='btn-group'>
                         <button
                           className='btn btn-primary btn-sm rounded-pill ms-1'
@@ -251,6 +295,29 @@ const Receipt = () => {
                     </tr>
                   ))}
               </tbody>
+              <tfoot className='fw-bold'>
+                <tr>
+                  <td colSpan={4}></td>
+                  <td>Total</td>
+                  <td>
+                    $
+                    {totalCosts &&
+                      totalCosts.toLocaleString({
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                  </td>
+                  <td className='text-danger'>
+                    $
+                    {totalBalances &&
+                      totalCosts &&
+                      (totalCosts - totalBalances).toLocaleString({
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                  </td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </>

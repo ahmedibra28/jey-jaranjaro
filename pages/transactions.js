@@ -8,7 +8,6 @@ import { FaFileDownload, FaTrash } from 'react-icons/fa'
 import useReports from '../api/reports'
 import { CSVLink } from 'react-csv'
 import moment from 'moment'
-import Pagination from '../components/Pagination'
 
 const Activities = () => {
   const [search, setSearch] = useState('')
@@ -27,9 +26,25 @@ const Activities = () => {
     setPage(1)
   }
 
+  const getOldBalance = (items) => {
+    const total = items.orderItems.reduce(
+      (acc, curr) => acc + curr.quantity * curr.price,
+      0
+    )
+    return total
+  }
+
+  const getBalance = (items) => {
+    console.log(items)
+    return items.reduce(
+      (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
+      0
+    )
+  }
+
   const forExcel =
     data &&
-    data.data.map((d) => ({
+    data.map((d) => ({
       Customer: d.customerName,
       Mobile: d.customerMobile,
       PreviousAmount: d.prevAmount,
@@ -56,7 +71,6 @@ const Activities = () => {
   const deleteHandler = (id) => {
     deleteMutateAsync(id)
   }
-  const lastValue = data && data.data && data.data[data.data.length - 1]
 
   return (
     <>
@@ -73,7 +87,7 @@ const Activities = () => {
 
       <div className='position-relative'>
         <CSVLink
-          data={data && data.data ? forExcel : []}
+          data={data && data ? forExcel : []}
           filename='transactions.csv'
         >
           <button
@@ -92,14 +106,11 @@ const Activities = () => {
         <div className='col-md-4 col-6 me-auto'>
           <h3 className='fw-light font-monospace'>Transactions</h3>
         </div>
-        <div className='col-md-4 col-6 m-auto'>
-          <Pagination data={data && data} setPage={setPage} />
-        </div>
 
         <div className='col-md-4 col-12 ms-auto'>
           <form onSubmit={(e) => searchHandler(e)}>
             <input
-              type='number'
+              type='text'
               className='form-control py-2'
               placeholder='Search by ID or Name'
               name='search'
@@ -129,16 +140,15 @@ const Activities = () => {
           <div className='table-responsive '>
             <table className='table table-sm hover bordered table-striped caption-top '>
               <caption>
-                {!isLoading && data ? data.total : 0} records were found
+                {!isLoading && data ? data.length : 0} records were found
               </caption>
               <thead>
                 <tr>
-                  <th>Customer Name</th>
-                  {/* <th>Mobile Number</th> */}
-                  <th>Prev Amount</th>
-                  <th>Paid Amount</th>
-                  <th>Discount Amount</th>
-                  <th>Running Balance</th>
+                  <th>Customer</th>
+                  <th>Mobile</th>
+                  <th>Order Amount</th>
+                  <th>Paid</th>
+                  <th>Discount</th>
                   <th>DateTime</th>
                   <th>Receipted</th>
                   <th></th>
@@ -146,15 +156,21 @@ const Activities = () => {
               </thead>
               <tbody>
                 {data &&
-                  data.data.map((employee) => (
+                  data.map((employee) => (
                     <tr key={employee._id}>
                       <td>{employee.customerName}</td>
+                      <td>{employee.customerMobile}</td>
+
                       <td>
                         $
-                        {employee.prevAmount.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
+                        {employee.order &&
+                          getOldBalance(employee.order).toLocaleString(
+                            undefined,
+                            {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            }
+                          )}
                       </td>
                       <td>
                         $
@@ -170,26 +186,16 @@ const Activities = () => {
                           maximumFractionDigits: 2,
                         })}
                       </td>
-                      <td>
-                        {`$${(
-                          employee.prevAmount -
-                          (employee.paidAmount + employee.discountAmount)
-                        ).toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}`}
-                      </td>
+
                       <td>{moment(employee.createdAt).format('lll')}</td>
                       <td>{employee.receiptBy && employee.receiptBy.name}</td>
                       <td>
-                        {lastValue && lastValue._id === employee._id && (
-                          <button
-                            className='btn btn-danger btn-sm rounded-pill ms-1'
-                            onClick={() => deleteHandler(employee._id)}
-                          >
-                            <FaTrash />
-                          </button>
-                        )}
+                        <button
+                          className='btn btn-danger btn-sm rounded-pill ms-1'
+                          onClick={() => deleteHandler(employee._id)}
+                        >
+                          <FaTrash />
+                        </button>
                       </td>
                     </tr>
                   ))}
