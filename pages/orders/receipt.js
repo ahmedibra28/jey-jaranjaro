@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form'
 import { inputNumber } from '../../utils/dynamicForm'
 
 const Receipt = () => {
-  const [receipt, setReceipt] = useState('')
+  const [receipt, setReceipt] = useState('615301507')
   const [id, setId] = useState(null)
   const queryClient = useQueryClient()
   const {
@@ -47,6 +47,25 @@ const Receipt = () => {
         0
       )
     return balance
+  }
+
+  const getRunningBalance = (order) => {
+    const trans =
+      transactions &&
+      transactions.length > 0 &&
+      transactions.filter((t) => t.order === order._id)
+
+    const balance =
+      trans.length > 0 &&
+      trans.reduce(
+        (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
+        0
+      )
+    const runningBalance = balance
+      ? order.cost - balance
+      : balance || order.cost
+
+    return runningBalance
   }
 
   const totalCosts =
@@ -184,7 +203,7 @@ const Receipt = () => {
               ) : (
                 <form onSubmit={handleSubmit(submitHandler)}>
                   <div className='row'>
-                    <div className='col-md-6 col-12'>
+                    <div className='col-md-4 col-12'>
                       {inputNumber({
                         register,
                         errors,
@@ -192,12 +211,20 @@ const Receipt = () => {
                         name: 'receipt',
                       })}
                     </div>
-                    <div className='col-md-6 col-12'>
+                    <div className='col-md-4 col-12'>
                       {inputNumber({
                         register,
                         errors,
                         label: 'Discount Money',
                         name: 'discount',
+                      })}
+                    </div>
+                    <div className='col-md-4 col-12'>
+                      {inputNumber({
+                        register,
+                        errors,
+                        label: 'Commission',
+                        name: 'commission',
                       })}
                     </div>
 
@@ -263,21 +290,22 @@ const Receipt = () => {
                 {orders &&
                   orders.map((order) => (
                     <tr key={order._id}>
-                      <td>{order._id}</td>
+                      <td> {order._id}</td>
                       <td>{order.fullName}</td>
                       <td>{order.mobileNumber}</td>
                       <td>{moment(order.createdAt).format('lll')}</td>
                       <td>{order.items} items</td>
                       <td>${order.cost.toFixed(2)}</td>
-                      {/* change text color if the is a balance */}
-                      <td className='text-danger'>
-                        $
-                        {!getBalance(order._id)
-                          ? order.cost.toFixed(2)
-                          : (order.cost - getBalance(order._id)).toFixed(2)}
+                      <td
+                        className={
+                          getRunningBalance(order) !== 0 ? 'text-danger' : ''
+                        }
+                      >
+                        ${getRunningBalance(order).toFixed(2)}
                       </td>
                       <td className='btn-group'>
                         <button
+                          disabled={getRunningBalance(order) === 0}
                           className='btn btn-primary btn-sm rounded-pill ms-1'
                           onClick={() => editHandler(order)}
                           data-bs-toggle='modal'
