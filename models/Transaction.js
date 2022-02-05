@@ -14,6 +14,7 @@ const transactionScheme = mongoose.Schema(
     customerMobile: { type: Number, required: true },
     paidAmount: { type: Number, required: true },
     discountAmount: { type: Number, required: true },
+    commissionAmount: { type: Number, default: 0 },
   },
   { timestamps: true }
 )

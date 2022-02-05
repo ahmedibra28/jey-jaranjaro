@@ -26,6 +26,13 @@ const Activities = () => {
     setPage(1)
   }
 
+  useEffect(() => {
+    if (isSuccessDelete) {
+      mutateAsync(search)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessDelete])
+
   const getOldBalance = (items) => {
     const total = items.orderItems.reduce(
       (acc, curr) => acc + curr.quantity * curr.price,
@@ -49,10 +56,11 @@ const Activities = () => {
       Mobile: d.customerMobile,
       PreviousAmount: d.prevAmount,
       PaidAmount: d.paidAmount,
+      CommissionAmount: d.commissionAmount,
       DiscountAmount: d.discountAmount,
       RunningBalance: `-$${(
         d.prevAmount -
-        (d.paidAmount + d.discountAmount)
+        (d.paidAmount + d.discountAmount + d.commissionAmount)
       ).toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -149,6 +157,7 @@ const Activities = () => {
                   <th>Order Amount</th>
                   <th>Paid</th>
                   <th>Discount</th>
+                  <th>Commission</th>
                   <th>DateTime</th>
                   <th>Receipted</th>
                   <th></th>
@@ -182,6 +191,13 @@ const Activities = () => {
                       <td>
                         $
                         {employee.discountAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
+                      <td>
+                        $
+                        {employee.commissionAmount.toLocaleString(undefined, {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}

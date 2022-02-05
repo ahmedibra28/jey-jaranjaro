@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import withAuth from '../../HOC/withAuth'
@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form'
 import { inputNumber } from '../../utils/dynamicForm'
 
 const Receipt = () => {
-  const [receipt, setReceipt] = useState('615301507')
+  const [receipt, setReceipt] = useState('')
   const [id, setId] = useState(null)
   const queryClient = useQueryClient()
   const {
@@ -33,21 +33,22 @@ const Receipt = () => {
 
   // console.log(transactions && transactions)
 
-  const getBalance = (order) => {
-    const trans =
-      transactions &&
-      transactions.length > 0 &&
-      transactions.filter((t) => t.order === order)
+  // const getBalance = (order) => {
+  //   const trans =
+  //     transactions &&
+  //     transactions.length > 0 &&
+  //     transactions.filter((t) => t.order === order)
 
-    const balance =
-      trans &&
-      trans.length > 0 &&
-      trans.reduce(
-        (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
-        0
-      )
-    return balance
-  }
+  //   const balance =
+  //     trans &&
+  //     trans.length > 0 &&
+  //     trans.reduce(
+  //       (acc, curr) =>
+  //         acc + curr.paidAmount + curr.discountAmount + curr.commissionAmount,
+  //       0
+  //     )
+  //   return balance
+  // }
 
   const getRunningBalance = (order) => {
     const trans =
@@ -58,7 +59,8 @@ const Receipt = () => {
     const balance =
       trans.length > 0 &&
       trans.reduce(
-        (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
+        (acc, curr) =>
+          acc + curr.paidAmount + curr.discountAmount + curr.commissionAmount,
         0
       )
     const runningBalance = balance
@@ -77,7 +79,8 @@ const Receipt = () => {
     transactions &&
     transactions.length > 0 &&
     transactions.reduce(
-      (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
+      (acc, curr) =>
+        acc + curr.paidAmount + curr.discountAmount + curr.commissionAmount,
       0
     )
 
@@ -108,6 +111,13 @@ const Receipt = () => {
       queryClient.invalidateQueries(['orders'])
     },
   })
+
+  useEffect(() => {
+    if (isSuccessUpdate) {
+      receiptMutateAsync(receipt)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessUpdate])
 
   const searchHandler = (e) => {
     e.preventDefault()

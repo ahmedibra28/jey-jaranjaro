@@ -41,8 +41,10 @@ handler.put(async (req, res) => {
   await dbConnect()
   const {
     _id,
-    data: { receipt, discount },
+    data: { receipt, discount, commission },
   } = req.body
+
+  console.log(req.body)
 
   const obj = await Order.findById(_id)
   if (obj) {
@@ -53,11 +55,12 @@ handler.put(async (req, res) => {
 
     const transactions = await Transaction.find({ order: _id })
     const transBalance = transactions.reduce(
-      (acc, curr) => acc + curr.paidAmount + curr.discountAmount,
+      (acc, curr) =>
+        acc + curr.paidAmount + curr.discountAmount + curr.commissionAmount,
       0
     )
 
-    const total = Number(discount) + Number(receipt)
+    const total = Number(discount) + Number(receipt) + Number(commission)
 
     if (balance - transBalance < total) {
       res
@@ -73,6 +76,7 @@ handler.put(async (req, res) => {
     await Transaction.create({
       paidAmount: receipt,
       discountAmount: discount,
+      commissionAmount: commission,
       order: _id,
       customerName: obj.fullName,
       customerMobile: obj.mobileNumber,
