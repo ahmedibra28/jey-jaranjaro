@@ -31,24 +31,7 @@ const Receipt = () => {
   const orders = data && data.orders
   const transactions = data && data.transactions
 
-  // console.log(transactions && transactions)
-
-  // const getBalance = (order) => {
-  //   const trans =
-  //     transactions &&
-  //     transactions.length > 0 &&
-  //     transactions.filter((t) => t.order === order)
-
-  //   const balance =
-  //     trans &&
-  //     trans.length > 0 &&
-  //     trans.reduce(
-  //       (acc, curr) =>
-  //         acc + curr.paidAmount + curr.discountAmount + curr.commissionAmount,
-  //       0
-  //     )
-  //   return balance
-  // }
+  
 
   const getRunningBalance = (order) => {
     const trans =

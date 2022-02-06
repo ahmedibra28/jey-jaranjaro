@@ -44,8 +44,6 @@ handler.put(async (req, res) => {
     data: { receipt, discount, commission },
   } = req.body
 
-  console.log(req.body)
-
   const obj = await Order.findById(_id)
   if (obj) {
     const balance = obj.orderItems.reduce(
