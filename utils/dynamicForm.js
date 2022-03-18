@@ -241,7 +241,7 @@ export const inputMultipleCheckBox = (args) => {
 }
 
 export const inputFile = (args) => {
-  const { register, errors, name, isRequired = true, label, setFile } = args
+  const { register, errors, name, isRequired = true, label } = args
 
   return (
     <div className='mb-3'>
@@ -252,7 +252,8 @@ export const inputFile = (args) => {
         placeholder={`Enter ${name}`}
         className='form-control'
         id='formFile'
-        onChange={(e) => setFile(e.target.files[0])}
+        multiple={true}
+        // onChange={(e) => setFile(e.target.files)}
       />
       {errors && errors[name] && (
         <span className='text-danger'>{errors[name].message}</span>

@@ -8,7 +8,7 @@ export const getOrders = async (page, search) =>
 export const addOrder = async (obj) => await dynamicAPI('post', url, obj)
 
 export const updateOrder = async (obj) =>
-  await dynamicAPI('put', `${url}/${obj._id}`, obj)
+  await dynamicAPI('put', `${url}/${obj._id}`, obj.formData)
 
 export const deleteOrder = async (id) =>
   await dynamicAPI('delete', `${url}/${id}`, {})

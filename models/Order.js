@@ -11,7 +11,13 @@ const orderScheme = mongoose.Schema(
         item: { type: String, required: true },
         quantity: { type: Number, required: true },
         price: { type: Number, required: true },
-        description: { type: String, required: true },
+        description: String,
+      },
+    ],
+    files: [
+      {
+        fullFileName: String,
+        filePath: String,
       },
     ],
   },

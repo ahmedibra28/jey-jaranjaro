@@ -3,7 +3,12 @@ import dbConnect from '../../../utils/db'
 import Order from '../../../models/Order'
 import { isAuth } from '../../../utils/auth'
 
+import fileUpload from 'express-fileupload'
+import { upload } from '../../../utils/fileManager'
+export const config = { api: { bodyParser: false } }
+
 const handler = nc()
+handler.use(fileUpload())
 
 handler.use(isAuth)
 handler.get(async (req, res) => {
@@ -42,26 +47,54 @@ handler.get(async (req, res) => {
 handler.post(async (req, res) => {
   await dbConnect()
 
-  const { fullName, mobileNumber } = req.body.data
-
-  const { inputFields: orderItems } = req.body
+  const { fullName, mobileNumber, inputFields } = req.body
+  const orderItems = JSON.parse(inputFields)
   const user = req.user.id
+
+  const files = req.files ? req.files.file : []
 
   if (orderItems && orderItems.length < 1) {
     return res.status(400).send('Please add items in this order')
   }
 
-  const createObj = await Order.create({
-    orderItems,
-    fullName,
-    mobileNumber,
-    user,
-  })
+  try {
+    const uploadFiles = (files) => {
+      const promises = files.map((file) => {
+        return upload({
+          fileName: file,
+          fileType: 'image',
+          pathName: 'designs',
+        })
+      })
+      return Promise.all(promises)
+    }
 
-  if (createObj) {
-    res.status(201).json({ status: 'success' })
-  } else {
-    return res.status(400).send('Invalid data')
+    if (files.length > 0) {
+      const uploadedFiles = await uploadFiles(files)
+
+      const createObj = await Order.create({
+        orderItems,
+        fullName,
+        mobileNumber,
+        user,
+        files: uploadedFiles,
+      })
+      if (createObj) {
+        res.send(createObj)
+      }
+    } else {
+      const createObj = await Order.create({
+        orderItems,
+        fullName,
+        mobileNumber,
+        user,
+      })
+      if (createObj) {
+        res.send(createObj)
+      }
+    }
+  } catch (error) {
+    res.status(500).send(error && error.message ? error.message : error)
   }
 })
 

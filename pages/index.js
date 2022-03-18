@@ -11,7 +11,7 @@ import { confirmAlert } from 'react-confirm-alert'
 import { Confirm } from '../components/Confirm'
 import { useForm } from 'react-hook-form'
 import Pagination from '../components/Pagination'
-import { inputNumber, inputText } from '../utils/dynamicForm'
+import { inputNumber, inputText, inputFile } from '../utils/dynamicForm'
 import moment from 'moment'
 import {
   FaEdit,
@@ -136,13 +136,24 @@ function Home() {
   }
 
   const submitHandler = (data) => {
+    const formData = new FormData()
+
+    console.log(formData, data)
+
+    for (let i = 0; i < data.file.length; i++) {
+      formData.append('file', data.file[i])
+    }
+
+    formData.append('fullName', data.fullName)
+    formData.append('mobileNumber', data.mobileNumber)
+    formData.append('inputFields', JSON.stringify(inputFields))
+
     edit
       ? updateMutateAsync({
           _id: id,
-          data,
-          inputFields,
+          formData,
         })
-      : addMutateAsync({ data, inputFields })
+      : addMutateAsync(formData)
   }
 
   const editHandler = (order) => {
@@ -221,7 +232,7 @@ function Home() {
         aria-labelledby='editOrderModalLabel'
         aria-hidden='true'
       >
-        <div className='modal-dialog modal-lg'>
+        <div className='modal-dialog modal-xl'>
           <div className='modal-content modal-background'>
             <div className='modal-header'>
               <h3 className='modal-title ' id='editOrderModalLabel'>
@@ -251,7 +262,7 @@ function Home() {
               ) : (
                 <form onSubmit={handleSubmit(submitHandler)}>
                   <div className='row'>
-                    <div className='col-md-6 col-12'>
+                    <div className='col-md-4 col-12'>
                       {inputText({
                         register,
                         errors,
@@ -259,12 +270,21 @@ function Home() {
                         name: 'fullName',
                       })}
                     </div>
-                    <div className='col-md-6 col-12'>
+                    <div className='col-md-4 col-12'>
                       {inputNumber({
                         register,
                         errors,
                         label: 'Mobile Number',
                         name: 'mobileNumber',
+                      })}
+                    </div>
+                    <div className='col-md-4 col-12'>
+                      {inputFile({
+                        register,
+                        errors,
+                        label: 'Upload File',
+                        name: 'file',
+                        isRequired: false,
                       })}
                     </div>
                     <hr />

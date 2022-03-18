@@ -178,6 +178,20 @@ const Detail = () => {
                     </tfoot>
                   </table>
                 </div>
+                <div className='row'>
+                  {data &&
+                    data.files &&
+                    data.files.map((item, index) => (
+                      <div key={index} className='col-md-6 col-12'>
+                        {/*  eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={item.filePath}
+                          alt={item.fullFileName}
+                          className='img-fluid'
+                        />
+                      </div>
+                    ))}
+                </div>
               </div>
             </div>
           </div>
