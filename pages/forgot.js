@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import Message from '../components/Message'
-import FormContainer from '../components/FormContainer'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 
@@ -38,7 +37,7 @@ const Forgot = () => {
     mutateAsync(data)
   }
   return (
-    <FormContainer>
+    <div className='forgot_page'>
       <Head>
         <title>Forgot</title>
         <meta property='og:title' content='Forgot' key='title' />
@@ -56,7 +55,7 @@ const Forgot = () => {
 
         <button
           type='submit'
-          className='btn btn-primary form-control '
+          className='btn btn-outline-primary form-control '
           disabled={isLoading}
         >
           {isLoading ? (
@@ -66,7 +65,7 @@ const Forgot = () => {
           )}
         </button>
       </form>
-    </FormContainer>
+    </div>
   )
 }
 

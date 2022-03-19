@@ -50,8 +50,9 @@ handler.post(async (req, res) => {
   const { fullName, mobileNumber, inputFields } = req.body
   const orderItems = JSON.parse(inputFields)
   const user = req.user.id
-
-  const files = req.files ? req.files.file : []
+  const files = req.files
+    ? (!Array.isArray(req.files.file) && [req.files.file]) || req.files.file
+    : []
 
   if (orderItems && orderItems.length < 1) {
     return res.status(400).send('Please add items in this order')

@@ -5,7 +5,7 @@ import withAuth from '../HOC/withAuth'
 import Message from '../components/Message'
 import Loader from 'react-loader-spinner'
 import moment from 'moment'
-import { FaFileDownload, FaPenAlt, FaPlus, FaTrash } from 'react-icons/fa'
+import { FaFileDownload, FaPlus, FaTimesCircle, FaEdit } from 'react-icons/fa'
 
 import useExpenses from '../api/expenses'
 
@@ -95,8 +95,6 @@ const Expense = () => {
     setValue('isActive', expense.isActive)
   }
 
-  const toUpper = (str) => str.charAt(0).toUpperCase() + str.slice(1)
-
   return (
     <>
       <Head>
@@ -185,7 +183,7 @@ const Expense = () => {
                     </button>
                     <button
                       type='submit'
-                      className='btn btn-primary '
+                      className='btn btn-outline-primary '
                       disabled={isLoadingAdd || isLoadingUpdate}
                     >
                       {isLoadingAdd || isLoadingUpdate ? (
@@ -203,34 +201,32 @@ const Expense = () => {
       </div>
 
       <div className='position-relative'>
-        <button
-          className='btn btn-primary position-fixed rounded-3 animate__bounceIn'
+        <FaPlus
+          className='text-light fs-1 bg-primary p-1 position-fixed rounded-3 animate__bounceIn'
           style={{
-            bottom: '20px',
+            top: '20px',
             right: '20px',
           }}
           data-bs-toggle='modal'
           data-bs-target='#editExpenseModal'
-        >
-          <FaPlus className='mb-1' />
-        </button>
+        />
 
         <CSVLink data={data ? data : []} filename='expense.csv'>
-          <button
-            className='btn btn-success position-fixed rounded-3 animate__bounceIn'
+          <FaFileDownload
+            className='text-light fs-1 bg-success p-1 position-fixed rounded-3 animate__bounceIn me-2'
             style={{
-              bottom: '60px',
-              right: '20px',
+              top: '20px',
+              right: '60px',
             }}
-          >
-            <FaFileDownload className='mb-1' />
-          </button>
+          />
         </CSVLink>
       </div>
 
-      <div className='row mt-2'>
-        <div className='col-md-4 col-6 me-auto'>
-          <h3 className='fw-light font-monospace'>Expenses</h3>
+      <div className='row'>
+        <div className='col-md-4 col-12 m-auto'>
+          <h3 className='fw-bold text-light font-monospace text-center'>
+            EXPENSES
+          </h3>
         </div>
       </div>
 
@@ -248,56 +244,51 @@ const Expense = () => {
         <Message variant='danger'>{error}</Message>
       ) : (
         <>
-          <div className='table-responsive '>
-            <table className='table table-sm hover bordered table-striped caption-top '>
-              <caption>{data && data.length} records were found</caption>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Expense</th>
-                  <th>Description</th>
-                  <th>DateTime</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  data.map((expense) => (
-                    <tr key={expense._id}>
-                      <td>{toUpper(expense.name)}</td>
-                      <td>${expense.expense.toFixed(2)}</td>
-                      <td>{expense.description}</td>
-                      <td>{moment(expense.createdAt).format('lll')}</td>
+          {!isLoading && data && (
+            <button className='btn btn-outline-light btn-sm'>
+              {data.length} records were found
+            </button>
+          )}
 
-                      <td className='btn-expense'>
-                        <button
-                          className='btn btn-primary btn-sm rounded-pill '
-                          onClick={() => editHandler(expense)}
-                          data-bs-toggle='modal'
-                          data-bs-target='#editExpenseModal'
-                        >
-                          <FaPenAlt />
-                        </button>
+          <div className='row gy-3 mt-3'>
+            {data &&
+              data.map((expense) => (
+                <div key={expense._id} className='col-md-6 col-12'>
+                  <div className='card position-relative py-0'>
+                    <div className='card-body py-1'>
+                      <div className='card-text text-center'>
+                        <span className='fw-bold text-primary'>
+                          {expense.name}
+                        </span>
+                        <br />
+                        <span className=''>
+                          ${expense.expense.toFixed(2)}
+                        </span>{' '}
+                        <br />
+                        <span className='text-primary'>
+                          {moment(expense.createdAt).format('lll')}
+                        </span>
+                        <br />
+                        <span className=''>{expense.description}</span>
+                      </div>
+                    </div>
 
-                        <button
-                          className='btn btn-danger btn-sm rounded-pill ms-1'
-                          onClick={() => deleteHandler(expense._id)}
-                          disabled={isLoadingDelete}
-                        >
-                          {isLoadingDelete ? (
-                            <span className='spinner-border spinner-border-sm' />
-                          ) : (
-                            <span>
-                              {' '}
-                              <FaTrash />
-                            </span>
-                          )}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                    <FaTimesCircle
+                      onClick={() => deleteHandler(expense._id)}
+                      disabled={isLoadingDelete}
+                      className='me-1 text-danger fs-2 position-absolute'
+                      style={{ bottom: '5', right: '20' }}
+                    />
+                    <FaEdit
+                      onClick={() => editHandler(expense)}
+                      data-bs-toggle='modal'
+                      data-bs-target='#editExpenseModal'
+                      className='me-1 text-primary fs-2 position-absolute'
+                      style={{ bottom: '5', left: '30' }}
+                    />
+                  </div>
+                </div>
+              ))}
           </div>
         </>
       )}

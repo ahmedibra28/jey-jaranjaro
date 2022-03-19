@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import withAuth from '../HOC/withAuth'
 import Message from '../components/Message'
 import Loader from 'react-loader-spinner'
-import { FaFileDownload, FaTrash } from 'react-icons/fa'
+import { FaFileDownload, FaTimesCircle, FaSearch } from 'react-icons/fa'
 import useReports from '../api/reports'
 import { CSVLink } from 'react-csv'
 import moment from 'moment'
@@ -40,8 +40,6 @@ const Activities = () => {
     )
     return total
   }
-
- 
 
   const forExcel =
     data &&
@@ -104,23 +102,35 @@ const Activities = () => {
         </CSVLink>
       </div>
 
-      <div className='row mt-3'>
-        <div className='col-md-4 col-6 me-auto'>
-          <h3 className='fw-light font-monospace'>Transactions</h3>
+      <div className='row'>
+        <div className='col-md-4 col-12 m-auto'>
+          <h3 className='fw-bold text-light font-monospace text-center'>
+            TRANSACTIONS
+          </h3>
         </div>
 
         <div className='col-md-4 col-12 ms-auto'>
-          <form onSubmit={(e) => searchHandler(e)}>
-            <input
-              type='text'
-              className='form-control py-2'
-              placeholder='Search by ID or Name'
-              name='search'
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              autoFocus
-              required
-            />
+          <form onSubmit={searchHandler}>
+            <div className='d-flex mb-3'>
+              <input
+                type='text'
+                value={search}
+                name='search'
+                onChange={(e) => setSearch(e.target.value)}
+                className='form-control'
+                placeholder='Search by order ID'
+                style={{ flex: '4' }}
+                aria-label='Search by order ID'
+                aria-describedby='basic-addon2'
+              />
+              <button
+                style={{ flex: '1' }}
+                className='btn btn-primary input-group-text'
+                id='basic-addon2'
+              >
+                <FaSearch className='mb-1' />
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -139,79 +149,71 @@ const Activities = () => {
         <Message variant='danger'>{error}</Message>
       ) : (
         <>
-          <div className='table-responsive '>
-            <table className='table table-sm hover bordered table-striped caption-top '>
-              <caption>
-                {!isLoading && data ? data.length : 0} records were found
-              </caption>
-              <thead>
-                <tr>
-                  <th>Customer</th>
-                  <th>Mobile</th>
-                  <th>Order Amount</th>
-                  <th>Paid</th>
-                  <th>Discount</th>
-                  <th>Commission</th>
-                  <th>DateTime</th>
-                  <th>Receipted</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  data.map((employee) => (
-                    <tr key={employee._id}>
-                      <td>{employee.customerName}</td>
-                      <td>{employee.customerMobile}</td>
+          {!isLoading && data && (
+            <button className='btn btn-outline-light btn-sm'>
+              {data.length} records were found
+            </button>
+          )}
 
-                      <td>
-                        $
-                        {employee.order &&
-                          getOldBalance(employee.order).toLocaleString(
-                            undefined,
-                            {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            }
-                          )}
-                      </td>
-                      <td>
-                        $
-                        {employee.paidAmount.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </td>
-                      <td>
-                        $
-                        {employee.discountAmount.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </td>
-                      <td>
-                        $
-                        {employee.commissionAmount.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </td>
-
-                      <td>{moment(employee.createdAt).format('lll')}</td>
-                      <td>{employee.receiptBy && employee.receiptBy.name}</td>
-                      <td>
-                        <button
-                          className='btn btn-danger btn-sm rounded-pill ms-1'
-                          onClick={() => deleteHandler(employee._id)}
-                        >
-                          <FaTrash />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+          {data &&
+            data.map((employee, index) => (
+              <div
+                key={index}
+                className='card text-dark my-2 position-relative'
+              >
+                <div className='card-body'>
+                  <div className='d-flex justify-content-between flex-column'>
+                    <span>
+                      <strong>Order Amount: </strong> $
+                      {employee.order &&
+                        getOldBalance(employee.order).toLocaleString(
+                          undefined,
+                          {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }
+                        )}
+                    </span>
+                    <span>
+                      <strong>Paid Amount: </strong> $
+                      {employee.paidAmount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                    <span>
+                      <strong>Discount Amount: </strong> $
+                      {employee.paidAmount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                    <span>
+                      {' '}
+                      $
+                      {employee.commissionAmount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                      {employee.quantity}
+                    </span>
+                    <span>
+                      <strong>Paid At: </strong>{' '}
+                      {moment(employee.createdAt).format('lll')}
+                    </span>
+                    <span>
+                      <strong>Cashier: </strong>{' '}
+                      {employee.receiptBy && employee.receiptBy.name}
+                    </span>
+                  </div>
+                  <FaTimesCircle
+                    onClick={() => deleteHandler(employee._id)}
+                    className='me-1 text-danger fs-2 position-absolute'
+                    style={{ bottom: '5', right: '20' }}
+                  />
+                </div>
+              </div>
+            ))}
         </>
       )}
     </>

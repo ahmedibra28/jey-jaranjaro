@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import Message from '../../components/Message'
-import FormContainer from '../../components/FormContainer'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { customLocalStorage } from '../../utils/customLocalStorage'
@@ -49,7 +48,7 @@ const Reset = () => {
   }
 
   return (
-    <FormContainer>
+    <div className='reset_page'>
       <Head>
         <title>Reset</title>
         <meta property='og:title' content='Reset' key='title' />
@@ -83,7 +82,7 @@ const Reset = () => {
 
         <button
           type='submit'
-          className='btn btn-primary form-control'
+          className='btn btn-outline-primary form-control'
           disabled={isLoading}
         >
           {isLoading ? (
@@ -93,7 +92,7 @@ const Reset = () => {
           )}
         </button>
       </form>
-    </FormContainer>
+    </div>
   )
 }
 

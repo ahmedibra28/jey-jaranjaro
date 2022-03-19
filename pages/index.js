@@ -15,11 +15,10 @@ import { inputNumber, inputText, inputFile } from '../utils/dynamicForm'
 import moment from 'moment'
 import {
   FaEdit,
-  FaInfoCircle,
   FaPlus,
   FaPlusCircle,
   FaTimesCircle,
-  FaTrash,
+  FaSearch,
 } from 'react-icons/fa'
 
 function Home() {
@@ -296,7 +295,6 @@ function Home() {
                               Item
                             </label>
                             <input
-                              autoFocus
                               type='text'
                               className='form-control'
                               placeholder='Item'
@@ -343,7 +341,6 @@ function Home() {
                               Description
                             </label>
                             <textarea
-                              autoFocus
                               type='text'
                               className='form-control'
                               placeholder='Item'
@@ -360,7 +357,7 @@ function Home() {
                                   <button
                                     onClick={() => handleRemoveField(index)}
                                     type='button'
-                                    className='btn btn-danger btn-sm'
+                                    className='btn btn-outline-danger btn-sm'
                                   >
                                     <FaTimesCircle className='mb-1' />
                                   </button>
@@ -369,7 +366,7 @@ function Home() {
                                   <button
                                     onClick={() => handleAddField()}
                                     type='button'
-                                    className='btn btn-primary btn-sm'
+                                    className='btn btn-outline-primary btn-sm'
                                   >
                                     <FaPlusCircle className='mb-1' />
                                   </button>
@@ -392,7 +389,7 @@ function Home() {
                       </button>
                       <button
                         type='submit'
-                        className='btn btn-primary '
+                        className='btn btn-outline-primary '
                         disabled={isLoadingAdd || isLoadingUpdate}
                       >
                         {isLoadingAdd || isLoadingUpdate ? (
@@ -410,38 +407,50 @@ function Home() {
         </div>
       </div>
 
-      <button
-        className='btn btn-primary position-fixed rounded-3 animate__bounceIn'
-        style={{
-          bottom: '20px',
-          right: '25px',
-        }}
-        data-bs-toggle='modal'
-        data-bs-target='#editOrderModal'
-      >
-        <FaPlus className='mb-1' />
-      </button>
+      <div className='position-relative'>
+        <FaPlus
+          className='text-light fs-1 bg-primary p-1 position-fixed rounded-3 animate__bounceIn'
+          style={{
+            top: '5px',
+            right: '20px',
+          }}
+          data-bs-toggle='modal'
+          data-bs-target='#editOrderModal'
+        />
+      </div>
 
-      <div className='row mt-2'>
-        <div className='col-md-4 col-6 m-auto'>
-          <h3 className='fw-light font-monospace'>Orders</h3>
+      <div className='row'>
+        <div className='col-md-4 col-12 m-auto'>
+          <h3 className='fw-bold text-light font-monospace text-center'>
+            ORDERS
+          </h3>
         </div>
-        <div className='col-md-4 col-6 m-auto'>
+        <div className='col-md-4 col-12 m-auto text-center'>
           <Pagination data={data} setPage={setPage} />
         </div>
 
-        <div className='col-md-4 col-12 m-auto'>
-          <form onSubmit={(e) => searchHandler(e)}>
-            <input
-              type='text'
-              className='form-control py-2'
-              placeholder='Search by Passport or Email'
-              name='search'
-              value={search}
-              onChange={(e) => (setSearch(e.target.value), setPage(1))}
-              autoFocus
-              required
-            />
+        <div className='col-md-4 col-12 m-auto mt-1'>
+          <form onSubmit={searchHandler}>
+            <div className='d-flex'>
+              <input
+                type='text'
+                value={search}
+                name='search'
+                onChange={(e) => (setSearch(e.target.value), setPage(1))}
+                className='form-control'
+                placeholder='Search by mobile number'
+                style={{ flex: '4' }}
+                aria-label='Search by mobile number'
+                aria-describedby='basic-addon2'
+              />
+              <button
+                style={{ flex: '1' }}
+                className='btn btn-primary input-group-text'
+                id='basic-addon2'
+              >
+                <FaSearch className='mb-1' />
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -460,62 +469,50 @@ function Home() {
         <Message variant='danger'>{error}</Message>
       ) : (
         <>
-          <div className='table-responsive '>
-            <table className='table table-sm hover bordered table-striped caption-top '>
-              <caption>{data && data.total} records were found</caption>
-              <thead>
-                <tr>
-                  <th>CUSTOMER</th>
-                  <th>MOBILE</th>
-                  <th>DATE</th>
-                  <th>NO. OF ITEMS</th>
-                  <th>COST</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  data.data.map((order) => (
-                    <tr key={order._id}>
-                      <td>{order.fullName}</td>
-                      <td>{order.mobileNumber}</td>
-                      <td>{moment(order.createdAt).format('lll')}</td>
-                      <td>{order.orderItems.length} items</td>
-                      <td>{getTotal(order.orderItems)}</td>
-                      <td className='btn-group'>
+          <div className='row gy-3 mt-3'>
+            {data &&
+              data.data &&
+              data.data.map((order) => (
+                <div key={order._id} className='col-md-6 col-12'>
+                  <div className='card position-relative py-0'>
+                    <div className='card-body py-1'>
+                      <div className='card-text text-center'>
                         <Link href={`/orders/${order._id}`}>
-                          <a className='btn btn-success btn-sm rounded-pill'>
-                            <FaInfoCircle />
+                          <a className='text-decoration-none'>
+                            <span className='fw-bold text-primary text-uppercase'>
+                              {order.fullName}
+                            </span>
                           </a>
                         </Link>
-                        <button
-                          className='btn btn-primary btn-sm rounded-pill ms-1'
-                          onClick={() => editHandler(order)}
-                          data-bs-toggle='modal'
-                          data-bs-target='#editOrderModal'
-                        >
-                          <FaEdit />
-                        </button>
+                        <br />
+                        <span className=''>{order.mobileNumber}</span> <br />
+                        <span className='text-primary'>
+                          {order.orderItems.length} items -{' '}
+                          {getTotal(order.orderItems)}
+                        </span>
+                        <br />
+                        <span className=''>
+                          {moment(order.createdAt).format('lll')}
+                        </span>
+                      </div>
+                    </div>
 
-                        <button
-                          className='btn btn-danger btn-sm rounded-pill ms-1'
-                          onClick={() => deleteHandler(order._id)}
-                          disabled={isLoadingDelete}
-                        >
-                          {isLoadingDelete ? (
-                            <span className='spinner-border spinner-border-sm' />
-                          ) : (
-                            <span>
-                              {' '}
-                              <FaTrash />
-                            </span>
-                          )}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                    <FaTimesCircle
+                      onClick={() => deleteHandler(order._id)}
+                      disabled={isLoadingDelete}
+                      className='me-1 text-danger fs-2 position-absolute'
+                      style={{ bottom: '5', right: '20' }}
+                    />
+                    <FaEdit
+                      onClick={() => editHandler(order)}
+                      data-bs-toggle='modal'
+                      data-bs-target='#editOrderModal'
+                      className='me-1 text-primary fs-2 position-absolute'
+                      style={{ bottom: '5', left: '30' }}
+                    />
+                  </div>
+                </div>
+              ))}
           </div>
         </>
       )}

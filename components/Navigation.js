@@ -1,17 +1,16 @@
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import {
-  FaCog,
   FaUserCircle,
-  FaSignInAlt,
-  FaUserPlus,
   FaPowerOff,
+  FaHome,
+  FaDollarSign,
+  FaChartPie,
+  FaHandHoldingUsd,
 } from 'react-icons/fa'
 import { logout } from '../api/users'
 import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'
-import { customLocalStorage } from '../utils/customLocalStorage'
-import { Access, UnlockAccess } from '../utils/UnlockAccess'
 
 const Navigation = () => {
   const router = useRouter()
@@ -30,148 +29,114 @@ const Navigation = () => {
         )
       : null
 
-  const guestItems = () => {
-    return (
-      <>
-        <ul className='navbar-nav ms-auto'>
-          <li className='nav-item'>
-            <Link href='/register'>
-              <a className='nav-link active' aria-current='page'>
-                <FaUserPlus className='mb-1' /> Register
-              </a>
-            </Link>
-          </li>
-          <li className='nav-item'>
-            <Link href='/login'>
-              <a className='nav-link active' aria-current='page'>
-                <FaSignInAlt className='mb-1' /> Login
-              </a>
-            </Link>
-          </li>
-        </ul>
-      </>
-    )
-  }
-
-  const authItems = () => {
-    return (
-      <>
-        <ul className='navbar-nav ms-auto'>
-          {customLocalStorage() &&
-            customLocalStorage().userAccessRoutes &&
-            customLocalStorage().userAccessRoutes.route &&
-            customLocalStorage().userAccessRoutes.route.map(
-              (route) =>
-                route.isActive &&
-                route.menu === 'Normal' && (
-                  <li key={route._id} className='nav-item'>
-                    <Link href={route.path}>
-                      <a className='nav-link active' aria-current='page'>
-                        {route.name}
-                      </a>
-                    </Link>
-                  </li>
-                )
-            )}
-
-          {UnlockAccess(Access.admin) && (
-            <li className='nav-item dropdown'>
-              <a
-                className='nav-link dropdown-toggle'
-                href='#'
-                id='navbarDropdownMenuLink'
-                role='button'
-                data-bs-toggle='dropdown'
-                aria-expanded='false'
-              >
-                <FaCog className='mb-1' /> Admin
-              </a>
-              <ul
-                className='dropdown-menu border-0'
-                aria-labelledby='navbarDropdownMenuLink'
-              >
-                {customLocalStorage() &&
-                  customLocalStorage().userAccessRoutes &&
-                  customLocalStorage().userAccessRoutes.route &&
-                  customLocalStorage().userAccessRoutes.route.map(
-                    (route) =>
-                      route.isActive &&
-                      route.menu === 'Admin' && (
-                        <li key={route._id}>
-                          <Link href={route.path}>
-                            <a className='dropdown-item'>{route.name}</a>
-                          </Link>
-                        </li>
-                      )
-                  )}
-              </ul>
-            </li>
-          )}
-
-          <li className='nav-item dropdown'>
-            <a
-              className='nav-link dropdown-toggle'
-              href='#'
-              id='navbarDropdownMenuLink'
-              role='button'
-              data-bs-toggle='dropdown'
-              aria-expanded='false'
-            >
-              <FaUserCircle className='mb-1' />{' '}
-              {customLocalStorage() &&
-                customLocalStorage().userInfo &&
-                customLocalStorage().userInfo.name}
-            </a>
-            <ul
-              className='dropdown-menu border-0'
-              aria-labelledby='navbarDropdownMenuLink'
-            >
-              <li>
-                <Link href='/profile'>
-                  <a className='dropdown-item'>
-                    <FaUserCircle className='mb-1' /> Profile
-                  </a>
-                </Link>
-              </li>
-
-              <li>
-                <Link href='/'>
-                  <a className='dropdown-item' onClick={logoutHandler}>
-                    <FaPowerOff className='mb-1' /> Logout
-                  </a>
-                </Link>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </>
-    )
-  }
-
   return (
-    <nav className='navbar navbar-expand-sm navbar-light shadow-lg'>
-      <div className='container'>
-        <Link href='/'>
-          <a className='navbar-brand'>BABA JEY</a>
-        </Link>
-
-        <button
-          className='navbar-toggler'
-          type='button'
-          data-bs-toggle='collapse'
-          data-bs-target='#navbarNav'
-          aria-controls='navbarNav'
-          aria-expanded='false'
-          aria-label='Toggle navigation'
-        >
-          <span className='navbar-toggler-icon'></span>
-        </button>
-        <div className='collapse navbar-collapse' id='navbarNav'>
-          {userInfo ? authItems() : guestItems()}
-        </div>
-      </div>
-    </nav>
+    <div className='div position-relative'>
+      <ul
+        className='nav nav-pills nav-fill shadow-sm p-1 position-fixed bottom-0 w-100 bg-outline-light'
+        style={{ zIndex: 1 }}
+      >
+        {userInfo ? (
+          <>
+            <li className='nav-item'>
+              <Link href='/'>
+                <a className='btn p-3' aria-current='page'>
+                  <FaHome className='text-primary fs-4' />
+                </a>
+              </Link>
+            </li>
+            <li className='nav-item'>
+              <Link href='/orders/receipt'>
+                <a className='btn p-3' aria-current='page'>
+                  <FaDollarSign className='text-primary fs-4' />
+                </a>
+              </Link>
+            </li>
+            <li className='nav-item'>
+              <Link href='/transactions'>
+                <a className='btn p-3' aria-current='page'>
+                  <FaChartPie className='text-primary fs-4' />
+                </a>
+              </Link>
+            </li>
+            <li className='nav-item'>
+              <Link href='/expenses'>
+                <a className='btn p-3' aria-current='page'>
+                  <FaHandHoldingUsd className='text-primary fs-4' />
+                </a>
+              </Link>
+            </li>
+            {/* <li className='nav-item'>
+          <Link href='/admin/users'>
+            <a className='btn p-3' aria-current='page'>
+              <FaUserCog className='text-primary fs-4' />
+            </a>
+          </Link>
+        </li> */}
+            <li className='nav-item'>
+              <Link href='/profile'>
+                <a className='btn p-3' aria-current='page'>
+                  <FaUserCircle className='text-primary fs-4' />
+                </a>
+              </Link>
+            </li>
+            <li className='nav-item'>
+              <Link href='/'>
+                <a
+                  className='btn p-3'
+                  aria-current='page'
+                  onClick={logoutHandler}
+                >
+                  <FaPowerOff className='text-primary fs-4' />
+                </a>
+              </Link>
+            </li>
+          </>
+        ) : (
+          <>
+            <li className='nav-item'>
+              <Link href='/'>
+                <a className='btn p-3' aria-current='page'>
+                  <FaHome className='text-primary fs-4' />
+                </a>
+              </Link>
+            </li>
+            <li className='nav-item'>
+              <Link href='/login'>
+                <a className='btn p-3' aria-current='page'>
+                  <FaPowerOff className='text-primary fs-4' />
+                </a>
+              </Link>
+            </li>
+          </>
+        )}
+      </ul>
+    </div>
   )
+
+  // return (
+  //   <nav className='navbar navbar-expand-sm navbar-light shadow-lg'>
+  //     <div className='container'>
+  //       <Link href='/'>
+  //         <a className='navbar-brand'>BABA JEY</a>
+  //       </Link>
+
+  //       <button
+  //         className='navbar-toggler'
+  //         type='button'
+  //         data-bs-toggle='collapse'
+  //         data-bs-target='#navbarNav'
+  //         aria-controls='navbarNav'
+  //         aria-expanded='false'
+  //         aria-label='Toggle navigation'
+  //       >
+  //         <span className='navbar-toggler-icon'></span>
+  //       </button>
+  //       <div className='collapse navbar-collapse' id='navbarNav'>
+  //         {userInfo ? authItems() : guestItems()}
+  //       </div>
+  //     </div>
+  //   </nav>
+  // )
 }
 
 export default dynamic(() => Promise.resolve(Navigation), { ssr: false })

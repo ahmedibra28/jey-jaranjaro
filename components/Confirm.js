@@ -9,17 +9,17 @@ export const Confirm = (action) => {
           <h1>Are you sure?</h1>
           <p>You want to delete this?</p>
           <div className='btn-group d-flex justify-content-between'>
-            <button className='btn btn-outline-dark bg-sm' onClick={onClose}>
+            <button className='btn btn-outline-dark btn-sm' onClick={onClose}>
               No
             </button>
             <button
-              className='btn btn-outline-danger bg-sm ml-1'
+              className='btn btn-outline-danger btn-sm'
               onClick={() => {
                 action()
                 onClose()
               }}
             >
-              <FaTrash className='mb-1' /> Yes, Delete it!
+              <FaTrash className='mb-1' /> Yes
             </button>
           </div>
         </div>

@@ -2,19 +2,23 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 
 const Pagination = ({ data, setPage }) => {
   return data ? (
-    <div className='text-end my-1'>
-      <span className='btn btn-light'>
+    <div className='text-center my-1'>
+      <span className='btn btn-sm p-2 btn-outline-light'>
         {data.startIndex} - {data.endIndex} of {data.total}
       </span>
       <span
         onClick={() => setPage(data.page - 1)}
-        className={`btn btn-light mx-1 ${data.page === 1 && 'disabled'}`}
+        className={`btn btn-sm py-2 px-3 btn-outline-dark mx-1 ${
+          data.page === 1 && 'disabled'
+        }`}
       >
         <FaChevronLeft className='mb-1' />
       </span>
       <span
         onClick={() => setPage(data.page + 1)}
-        className={`btn btn-light ${data.page === data.pages && 'disabled'}`}
+        className={`btn btn-sm py-2 px-3 btn-light ${
+          data.page === data.pages && 'disabled'
+        }`}
       >
         <FaChevronRight className='mb-1' />
       </span>

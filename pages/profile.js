@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic'
 import withAuth from '../HOC/withAuth'
 import Message from '../components/Message'
 import Loader from 'react-loader-spinner'
-import FormContainer from '../components/FormContainer'
 import { useForm } from 'react-hook-form'
 
 import { getUserDetails, updateUserProfile } from '../api/users'
@@ -72,7 +71,7 @@ const Profile = () => {
   }
 
   return (
-    <FormContainer>
+    <div className='profile_page'>
       <Head>
         <title>Profile</title>
         <meta property='og:title' content='Profile' key='title' />
@@ -126,7 +125,7 @@ const Profile = () => {
         })}
         <button
           type='submit'
-          className='btn btn-primary form-control'
+          className='btn btn-outline-primary form-control'
           disabled={isLoadingUpdateProfile}
         >
           {isLoadingUpdateProfile ? (
@@ -136,7 +135,7 @@ const Profile = () => {
           )}
         </button>
       </form>
-    </FormContainer>
+    </div>
   )
 }
 

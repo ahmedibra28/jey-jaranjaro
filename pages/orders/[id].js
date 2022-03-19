@@ -48,136 +48,115 @@ const Detail = () => {
               <div className='d-flex justify-content-between'>
                 <button
                   onClick={() => router.back()}
-                  className='btn btn-primary btn-sm rounded-pill'
+                  className='btn btn-primary btn-sm'
                 >
                   <FaArrowCircleLeft className='mb-1' /> Go Back
                 </button>
                 <button
                   onClick={handlePrint}
                   type='submit'
-                  className='btn btn-primary rounded-pill '
+                  className='btn btn-outline-primary rounded-pill '
                 >
                   <FaPrint className='mb-1' />
                   Print
                 </button>
-                <h4 className='text-center'>Order Details</h4>
               </div>
+              <h4 className='text-center fw-bold text-light my-2'>
+                ORDER DETAILS
+              </h4>
               <hr />
               <div ref={componentRef}>
-                <div className='border border-secondary p-3'>
-                  <div className='d-flex justify-content-between'>
+                <div className='border border-secondary'>
+                  <div className='d-flex justify-content-around shadow p-2 rounded-3 bg-light text-dark'>
                     <div className='customer'>
-                      <span className='fw-bold'>Customer: </span>{' '}
+                      <span className='fw-bold'>Customer: </span>
+                      <br />
                       <span> {data.fullName}</span>
                     </div>
                     <div className='mobile'>
-                      <span className='fw-bold'>Mobile Number: </span>{' '}
+                      <span className='fw-bold'>Mobile: </span>
+                      <br />
                       <span> {data.mobileNumber}</span>
                     </div>
                   </div>
                   <hr />
-                  <div className='d-flex justify-content-between'>
+                  <div className='d-flex justify-content-around shadow p-2 rounded-3 bg-light text-dark'>
                     <div className='date'>
-                      <span className='fw-bold'>Date: </span>{' '}
+                      <span className='fw-bold'>Date: </span>
+                      <br />
                       <span> {moment(data.createdAt).format('MMM Do YY')}</span>
                     </div>
                     <div className='approved'>
-                      <span className='fw-bold'>Approved: </span>{' '}
+                      <span className='fw-bold'>Approved: </span>
+                      <br />
                       <span> {data.user.name}</span>
                     </div>
-                    <div className='total'>
-                      <span className='fw-bold'>Total: </span>{' '}
-                      <span>
-                        $
-                        {data.orderItems
-                          .reduce(
-                            (acc, cur) => acc + cur.quantity * cur.price,
-                            0
-                          )
-                          .toLocaleString(undefined, {
+                  </div>
+                </div>
+                <hr />
+
+                <div className='d-flex justify-content-between'>
+                  <button className='btn btn-outline-light btn-sm'>
+                    {data.orderItems.reduce(
+                      (acc, cur) => acc + cur.quantity,
+                      0
+                    )}{' '}
+                    items
+                  </button>
+                  <button className='btn btn-outline-light btn-sm'>
+                    $
+                    {data.orderItems
+                      .reduce((acc, cur) => acc + cur.price, 0)
+                      .toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}{' '}
+                  </button>
+                  <button className='btn btn-outline-light btn-sm'>
+                    $
+                    {data.orderItems
+                      .reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
+                      .toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                  </button>
+                </div>
+                {data.orderItems.map((item, index) => (
+                  <div key={index} className='card text-dark my-2'>
+                    <div className='card-body'>
+                      <div className='d-flex justify-content-between flex-column'>
+                        <span>
+                          <strong>Item: </strong> {item.item}
+                        </span>
+                        <span>
+                          <strong>Quantity: </strong> {item.quantity}
+                        </span>
+                        <span>
+                          <strong>Price: </strong> $
+                          {item.price.toLocaleString(undefined, {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                           })}
-                      </span>
-                    </div>
-                  </div>{' '}
-                </div>
-                <hr />
-                <div className='table-responsive'>
-                  <table className='table table-bordered border-secondary text-secondary'>
-                    <thead>
-                      <tr>
-                        <th scope='col'>#</th>
-                        <th scope='col'>Item</th>
-                        <th scope='col'>Quantity</th>
-                        <th scope='col'>Price</th>
-                        <th scope='col'>Total</th>
-                        <th scope='col'>Description</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.orderItems.map((item, index) => (
-                        <tr key={item._id}>
-                          <th scope='row'>{index + 1}</th>
-                          <td>{item.item}</td>
-                          <td>{item.quantity}</td>
-                          <td>
-                            $
-                            {item.price.toLocaleString(undefined, {
+                        </span>
+                        <span>
+                          <strong>Total: </strong> $
+                          {(item.price * item.quantity).toLocaleString(
+                            undefined,
+                            {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
-                            })}
-                          </td>
-                          <td>
-                            $
-                            {(item.price * item.quantity).toLocaleString(
-                              undefined,
-                              {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              }
-                            )}
-                          </td>
-                          <td>{item.description}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <td colSpan='2' className='text-center'>
-                          Total
-                        </td>
-                        <td>
-                          {data.orderItems.reduce(
-                            (acc, cur) => acc + cur.quantity,
-                            0
+                            }
                           )}
-                        </td>
-                        <td>
-                          $
-                          {data.orderItems
-                            .reduce((acc, cur) => acc + cur.price, 0)
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })}{' '}
-                        </td>
-                        <td colSpan='2'>
-                          $
-                          {data.orderItems
-                            .reduce(
-                              (acc, cur) => acc + cur.quantity * cur.price,
-                              0
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })}
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
+                        </span>
+                      </div>
+                      <p className='mt-2'>
+                        <strong>Description: </strong> {item.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+
                 <div className='row'>
                   {data &&
                     data.files &&

@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Message from '../components/Message'
-import FormContainer from '../components/FormContainer'
 
 import { registerUser } from '../api/users'
 import { useMutation } from 'react-query'
@@ -47,7 +46,7 @@ const Register = () => {
     mutateAsync(data)
   }
   return (
-    <FormContainer>
+    <div className='register_page'>
       <Head>
         <title>Sign up</title>
         <meta property='og:title' content='Signup' key='title' />
@@ -80,32 +79,25 @@ const Register = () => {
           minLength: true,
         })}
 
-        <button
-          type='submit'
-          className='btn btn-primary form-control'
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <span className='spinner-border spinner-border-sm' />
-          ) : (
-            'Sign Up'
-          )}
-        </button>
-      </form>
+        <div className='btn-group'>
+          <button
+            type='submit'
+            className='btn btn-outline-primary form-control'
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className='spinner-border spinner-border-sm' />
+            ) : (
+              'Sign Up'
+            )}
+          </button>
 
-      <Link href='/login' type='submit'>
-        <a className='btn btn-outline-primary form-control mt-2 '>Login</a>
-      </Link>
-
-      <div className='row py-3'>
-        <div className='col'>
-          Have an Account?
-          <Link href='/login'>
-            <a className='ps-1 text-decoration-none'>Login </a>
+          <Link href='/login' type='submit'>
+            <a className='btn btn-primary form-control ms-2'>Login</a>
           </Link>
         </div>
-      </div>
-    </FormContainer>
+      </form>
+    </div>
   )
 }
 

@@ -32,7 +32,8 @@
     "react-icons": "^4.3.1",
     "react-loader-spinner": "^4.0.0",
     "react-query": "^3.34.0",
-    "react-to-print": "^2.14.3"
+    "react-to-print": "^2.14.3",
+    "sass": "^1.49.9"
   },
   "devDependencies": {
     "eslint": "8.4.1",

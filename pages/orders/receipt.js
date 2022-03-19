@@ -31,8 +31,6 @@ const Receipt = () => {
   const orders = data && data.orders
   const transactions = data && data.transactions
 
-  
-
   const getRunningBalance = (order) => {
     const trans =
       transactions &&
@@ -129,19 +127,28 @@ const Receipt = () => {
 
   return (
     <div className='mt-3'>
+      <div className='row'>
+        <div className='col-md-4 col-12 m-auto'>
+          <h3 className='fw-bold text-light font-monospace text-center'>
+            RECEIPTS
+          </h3>
+        </div>
+      </div>
       <form onSubmit={searchHandler}>
-        <div className='input-group mb-3'>
+        <div className='d-flex mb-3'>
           <input
-            type='text'
+            type='number'
             value={receipt}
             name='receipt'
             onChange={(e) => setReceipt(e.target.value)}
             className='form-control'
             placeholder='Receipt by mobile number'
+            style={{ flex: '4' }}
             aria-label='Receipt by mobile number'
             aria-describedby='basic-addon2'
           />
           <button
+            style={{ flex: '1' }}
             className='btn btn-primary input-group-text'
             id='basic-addon2'
           >
@@ -232,7 +239,7 @@ const Receipt = () => {
                       </button>
                       <button
                         type='submit'
-                        className='btn btn-primary '
+                        className='btn btn-outline-primary '
                         disabled={isLoadingUpdate}
                       >
                         {isLoadingUpdate ? (
@@ -264,82 +271,83 @@ const Receipt = () => {
         <Message variant='danger'>{errorReceipt}</Message>
       ) : (
         <>
-          <div className='table-responsive '>
-            <table className='table table-sm hover bordered table-striped caption-top'>
-              <caption>{orders ? orders.length : 0} records were found</caption>
-              <thead>
-                <tr>
-                  <th>REF</th>
-                  <th>CUSTOMER</th>
-                  <th>MOBILE</th>
-                  <th>DATE</th>
-                  <th>NO. OF ITEMS</th>
-                  <th>COST</th>
-                  <th>BALANCE</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders &&
-                  orders.map((order) => (
-                    <tr key={order._id}>
-                      <td> {order._id}</td>
-                      <td>{order.fullName}</td>
-                      <td>{order.mobileNumber}</td>
-                      <td>{moment(order.createdAt).format('lll')}</td>
-                      <td>{order.items} items</td>
-                      <td>${order.cost.toFixed(2)}</td>
-                      <td
-                        className={
-                          getRunningBalance(order) !== 0 ? 'text-danger' : ''
-                        }
-                      >
-                        ${getRunningBalance(order).toFixed(2)}
-                      </td>
-                      <td className='btn-group'>
-                        <button
-                          disabled={getRunningBalance(order) === 0}
-                          className='btn btn-primary btn-sm rounded-pill ms-1'
-                          onClick={() => editHandler(order)}
-                          data-bs-toggle='modal'
-                          data-bs-target='#editOrderModal'
-                        >
-                          <FaDollarSign />
-                        </button>
+          <div className='btn-group d-flex'>
+            <button className='btn btn-outline-light btn-sm'>
+              TOTAL: $
+              {totalCosts &&
+                totalCosts.toLocaleString({
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+            </button>
+            <button className='btn btn-outline-danger btn-sm'>
+              $
+              {totalBalances &&
+                totalCosts &&
+                (totalCosts - totalBalances).toLocaleString({
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+            </button>
+          </div>
 
-                        <Link href={`/orders/${order._id}`}>
-                          <a className='btn btn-success btn-sm rounded-pill ms-1'>
-                            <FaInfoCircle />
-                          </a>
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-              <tfoot className='fw-bold'>
-                <tr>
-                  <td colSpan={4}></td>
-                  <td>Total</td>
-                  <td>
-                    $
-                    {totalCosts &&
-                      totalCosts.toLocaleString({
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                  </td>
-                  <td className='text-danger'>
-                    $
-                    {totalBalances &&
-                      totalCosts &&
-                      (totalCosts - totalBalances).toLocaleString({
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
+          <div className='row gy-3 mt-3'>
+            {orders &&
+              orders.map((order) => (
+                <div
+                  key={order._id}
+                  className={
+                    getRunningBalance(order) !== 0
+                      ? 'text-danger col-md-6 col-12'
+                      : 'col-md-6 col-12'
+                  }
+                >
+                  <div className='card position-relative py-0'>
+                    <div className='card-body py-1'>
+                      <div className='card-text text-center'>
+                        <span className='fw-bold text-primary'>
+                          {order._id}
+                        </span>
+                        <br />
+                        <span className='fw-bold text-primary'>
+                          {order.fullName}
+                        </span>
+                        <br />
+                        <span className=''>{order.mobileNumber}</span> <br />
+                        <span className='text-primary'>
+                          {order.items} items - ${order.cost.toFixed(2)}
+                        </span>
+                        <br />
+                        <span className=''>
+                          {moment(order.createdAt).format('lll')}
+                        </span>{' '}
+                        <br />${getRunningBalance(order).toFixed(2)} Running
+                        Balance
+                      </div>
+                    </div>
+
+                    {getRunningBalance(order) !== 0 && (
+                      <FaDollarSign
+                        onClick={() => editHandler(order)}
+                        data-bs-toggle='modal'
+                        data-bs-target='#editOrderModal'
+                        className='me-1 text-danger fs-2 position-absolute'
+                        style={{ bottom: '5', right: '20' }}
+                      />
+                    )}
+
+                    <Link href={`/orders/${order._id}`}>
+                      <a>
+                        <FaInfoCircle
+                          onClick={() => editHandler(order)}
+                          className='me-1 text-primary fs-2 position-absolute'
+                          style={{ bottom: '5', left: '30' }}
+                        />
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+              ))}
           </div>
         </>
       )}

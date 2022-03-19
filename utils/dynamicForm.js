@@ -3,7 +3,7 @@ export const inputText = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <input
         {...register(name, isRequired && { required: `${label} is required` })}
         type='text'
@@ -22,7 +22,7 @@ export const inputTextArea = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <textarea
         rows='5'
         cols='30'
@@ -43,7 +43,7 @@ export const inputNumber = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <input
         {...register(name, isRequired && { required: `${label} is required` })}
         type='number'
@@ -63,7 +63,7 @@ export const inputEmail = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <input
         {...register(name, {
           required: `${label} is required`,
@@ -97,7 +97,7 @@ export const inputPassword = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <input
         {...register(name, {
           required: isRequired ? `${label} is required` : null,
@@ -128,7 +128,7 @@ export const dynamicInputSelect = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <select
         {...register(name, isRequired && { required: `${label} is required` })}
         type='text'
@@ -155,7 +155,7 @@ export const staticInputSelect = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <select
         {...register(name, isRequired && { required: `${label} is required` })}
         type='text'
@@ -245,7 +245,7 @@ export const inputFile = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <input
         {...register(name, isRequired && { required: `${label} is required` })}
         type='file'
@@ -267,7 +267,7 @@ export const inputDate = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <input
         {...register(name, isRequired && { required: `${label} is required` })}
         type='date'
@@ -320,7 +320,7 @@ export const dynamicInputSelectNumber = (args) => {
 
   return (
     <div className='mb-3'>
-      <label htmlFor={name}>{label}</label>
+      {/* <label htmlFor={name}>{label}</label> */}
       <select
         {...register(name, isRequired && { required: `${label} is required` })}
         type='text'
