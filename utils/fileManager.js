@@ -44,7 +44,7 @@ export const upload = async (args) => {
 export const deleteFile = (args) => {
   const { pathName } = args
 
-  const filePath = `/public/${pathName}`
+  const filePath = `/public/designs/${pathName}`
 
   const destroy =
     pathName &&

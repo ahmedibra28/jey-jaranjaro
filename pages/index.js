@@ -26,6 +26,7 @@ function Home() {
   const [id, setId] = useState(null)
   const [edit, setEdit] = useState(false)
   const [search, setSearch] = useState('')
+  const [files, setFiles] = useState([])
   const {
     register,
     handleSubmit,
@@ -156,6 +157,7 @@ function Home() {
   }
 
   const editHandler = (order) => {
+    setFiles(order.files && order.files)
     setId(order._id)
     setValue('fullName', order.fullName)
     setValue('mobileNumber', order.mobileNumber)
@@ -281,10 +283,17 @@ function Home() {
                       {inputFile({
                         register,
                         errors,
-                        label: 'Upload File',
+                        label: edit
+                          ? `${files && files.length} files`
+                          : 'Upload File',
                         name: 'file',
                         isRequired: false,
                       })}
+                      {edit &&
+                        files &&
+                        files.map((f) => (
+                          <span key={f.fullFileName}>{f.fullFileName},</span>
+                        ))}
                     </div>
                     <hr />
                     {inputFields.map((inputField, index) => (

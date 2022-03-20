@@ -4,7 +4,7 @@ const path = require('path')
 
 const port =
   process.env.NODE_ENV === 'production'
-    ? parseInt(process.env.PORT, 10) || 80
+    ? parseInt(process.env.PORT, 10) || 3000
     : parseInt(process.env.PORT, 10) || 3000
 
 const dev = process.env.NODE_ENV !== 'production'
