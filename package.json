@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "NODE_ENV=production nodemon server.js"
+    "start": "next start"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.0",
