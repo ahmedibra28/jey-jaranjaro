@@ -2,7 +2,7 @@ import nc from 'next-connect'
 import dbConnect from '../../../utils/db'
 import Order from '../../../models/Order'
 import { isAuth } from '../../../utils/auth'
-import { upload, deleteFile } from '../../../utils/fileManager'
+import { deleteFile } from '../../../utils/fileManager'
 
 const handler = nc()
 handler.use(isAuth)
