@@ -3,7 +3,7 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import withAuth from '../../HOC/withAuth'
 import Message from '../../components/Message'
-import Loader from 'react-loader-spinner'
+
 import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa'
 import Pagination from '../../components/Pagination'
 import { getUsers, updateUser, deleteUser, createUser } from '../../api/users'
@@ -19,6 +19,7 @@ import {
   inputPassword,
   inputText,
 } from '../../utils/dynamicForm'
+import Spinner from '../../components/Spinner'
 
 const Users = () => {
   const [page, setPage] = useState(1)
@@ -170,13 +171,7 @@ const Users = () => {
             <div className='modal-body'>
               {isLoading ? (
                 <div className='text-center'>
-                  <Loader
-                    type='ThreeDots'
-                    color='#00BFFF'
-                    height={100}
-                    width={100}
-                    timeout={3000} //3 secs
-                  />
+                  <Spinner />
                 </div>
               ) : isError ? (
                 <Message variant='danger'>{error}</Message>
@@ -259,13 +254,7 @@ const Users = () => {
 
       {isLoading ? (
         <div className='text-center'>
-          <Loader
-            type='ThreeDots'
-            color='#00BFFF'
-            height={100}
-            width={100}
-            timeout={3000} //3 secs
-          />
+          <Spinner />
         </div>
       ) : isError ? (
         <Message variant='danger'>{error}</Message>

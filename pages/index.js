@@ -4,14 +4,14 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import withAuth from '../HOC/withAuth'
 import Message from '../components/Message'
-import Loader from 'react-loader-spinner'
+
 import { addOrder, getOrders, updateOrder, deleteOrder } from '../api/orders'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { confirmAlert } from 'react-confirm-alert'
 import { Confirm } from '../components/Confirm'
 import { useForm } from 'react-hook-form'
 import Pagination from '../components/Pagination'
-import { inputNumber, inputText, inputFile } from '../utils/dynamicForm'
+import { inputNumber, inputText } from '../utils/dynamicForm'
 import moment from 'moment'
 import {
   FaEdit,
@@ -20,13 +20,14 @@ import {
   FaTimesCircle,
   FaSearch,
 } from 'react-icons/fa'
+import Spinner from '../components/Spinner'
 
 function Home() {
   const [page, setPage] = useState(1)
   const [id, setId] = useState(null)
   const [edit, setEdit] = useState(false)
   const [search, setSearch] = useState('')
-  const [files, setFiles] = useState([])
+  // const [files, setFiles] = useState([])
   const {
     register,
     handleSubmit,
@@ -136,17 +137,11 @@ function Home() {
   }
 
   const submitHandler = (data) => {
-    const formData = new FormData()
-
-    console.log(formData, data)
-
-    for (let i = 0; i < data.file.length; i++) {
-      formData.append('file', data.file[i])
+    const formData = {
+      fullName: data.fullName,
+      mobileNumber: data.mobileNumber,
+      inputFields: JSON.stringify(inputFields),
     }
-
-    formData.append('fullName', data.fullName)
-    formData.append('mobileNumber', data.mobileNumber)
-    formData.append('inputFields', JSON.stringify(inputFields))
 
     edit
       ? updateMutateAsync({
@@ -157,7 +152,7 @@ function Home() {
   }
 
   const editHandler = (order) => {
-    setFiles(order.files && order.files)
+    // setFiles(order.files && order.files)
     setId(order._id)
     setValue('fullName', order.fullName)
     setValue('mobileNumber', order.mobileNumber)
@@ -250,20 +245,14 @@ function Home() {
             <div className='modal-body'>
               {isLoading ? (
                 <div className='text-center'>
-                  <Loader
-                    type='ThreeDots'
-                    color='#00BFFF'
-                    height={100}
-                    width={100}
-                    timeout={3000} //3 secs
-                  />
+                  <Spinner />
                 </div>
               ) : isError ? (
                 <Message variant='danger'>{error}</Message>
               ) : (
                 <form onSubmit={handleSubmit(submitHandler)}>
                   <div className='row'>
-                    <div className='col-md-4 col-12'>
+                    <div className='col-md-8 col-12'>
                       {inputText({
                         register,
                         errors,
@@ -279,8 +268,8 @@ function Home() {
                         name: 'mobileNumber',
                       })}
                     </div>
-                    <div className='col-md-4 col-12'>
-                      {inputFile({
+                    {/* <div className='col-md-4 col-12'>
+                     {inputFile({
                         register,
                         errors,
                         label: edit
@@ -288,13 +277,13 @@ function Home() {
                           : 'Upload File',
                         name: 'file',
                         isRequired: false,
-                      })}
-                      {edit &&
+                      })} 
+                     {edit &&
                         files &&
                         files.map((f) => (
                           <span key={f.fullFileName}>{f.fullFileName},</span>
-                        ))}
-                    </div>
+                        ))} 
+                    </div> */}
                     <hr />
                     {inputFields.map((inputField, index) => (
                       <div key={index}>
@@ -466,13 +455,7 @@ function Home() {
 
       {isLoading ? (
         <div className='text-center'>
-          <Loader
-            type='ThreeDots'
-            color='#00BFFF'
-            height={100}
-            width={100}
-            timeout={3000} //3 secs
-          />
+          <Spinner />
         </div>
       ) : isError ? (
         <Message variant='danger'>{error}</Message>
@@ -486,12 +469,13 @@ function Home() {
                   <div className='card position-relative py-0'>
                     <div className='card-body py-1'>
                       <div className='card-text text-center'>
-                        <Link href={`/orders/${order._id}`}>
-                          <a className='text-decoration-none'>
-                            <span className='fw-bold text-primary text-uppercase'>
-                              {order.fullName}
-                            </span>
-                          </a>
+                        <Link
+                          href={`/orders/${order._id}`}
+                          className='text-decoration-none'
+                        >
+                          <span className='fw-bold text-primary text-uppercase'>
+                            {order.fullName}
+                          </span>
                         </Link>
                         <br />
                         <span className=''>{order.mobileNumber}</span> <br />
@@ -523,6 +507,8 @@ function Home() {
                 </div>
               ))}
           </div>
+
+          <div>Test</div>
         </>
       )}
     </div>

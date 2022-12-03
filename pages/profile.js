@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import withAuth from '../HOC/withAuth'
 import Message from '../components/Message'
-import Loader from 'react-loader-spinner'
+
 import { useForm } from 'react-hook-form'
 
 import { getUserDetails, updateUserProfile } from '../api/users'
@@ -10,6 +10,7 @@ import { useQuery, useMutation } from 'react-query'
 import { customLocalStorage } from '../utils/customLocalStorage'
 import Head from 'next/head'
 import { inputEmail, inputPassword, inputText } from '../utils/dynamicForm'
+import Spinner from '../components/Spinner'
 
 const Profile = () => {
   const {
@@ -86,13 +87,7 @@ const Profile = () => {
       )}
       {isLoading && (
         <div className='text-center'>
-          <Loader
-            type='ThreeDots'
-            color='#00BFFF'
-            height={100}
-            width={100}
-            timeout={3000} //3 secs
-          />
+          <Spinner />
         </div>
       )}
       <form onSubmit={handleSubmit(submitHandler)}>

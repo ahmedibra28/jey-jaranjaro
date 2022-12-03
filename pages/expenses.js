@@ -3,7 +3,7 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import withAuth from '../HOC/withAuth'
 import Message from '../components/Message'
-import Loader from 'react-loader-spinner'
+
 import moment from 'moment'
 import { FaFileDownload, FaPlus, FaTimesCircle, FaEdit } from 'react-icons/fa'
 
@@ -15,6 +15,7 @@ import { confirmAlert } from 'react-confirm-alert'
 import { Confirm } from '../components/Confirm'
 import { useForm } from 'react-hook-form'
 import { inputNumber, inputText, inputTextArea } from '../utils/dynamicForm'
+import Spinner from '../components/Spinner'
 
 const Expense = () => {
   const { getExpenses, updateExpense, addExpense, deleteExpense } =
@@ -146,13 +147,7 @@ const Expense = () => {
             <div className='modal-body'>
               {isLoading ? (
                 <div className='text-center'>
-                  <Loader
-                    type='ThreeDots'
-                    color='#00BFFF'
-                    height={100}
-                    width={100}
-                    timeout={3000} //3 secs
-                  />
+                  <Spinner />
                 </div>
               ) : isError ? (
                 <Message variant='danger'>{error}</Message>
@@ -232,13 +227,7 @@ const Expense = () => {
 
       {isLoading ? (
         <div className='text-center'>
-          <Loader
-            type='ThreeDots'
-            color='#00BFFF'
-            height={100}
-            width={100}
-            timeout={3000} //3 secs
-          />
+          <Spinner />
         </div>
       ) : isError ? (
         <Message variant='danger'>{error}</Message>

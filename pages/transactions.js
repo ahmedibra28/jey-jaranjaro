@@ -3,11 +3,12 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import withAuth from '../HOC/withAuth'
 import Message from '../components/Message'
-import Loader from 'react-loader-spinner'
+
 import { FaFileDownload, FaTimesCircle, FaSearch } from 'react-icons/fa'
 import useReports from '../api/reports'
 import { CSVLink } from 'react-csv'
 import moment from 'moment'
+import Spinner from '../components/Spinner'
 
 const Activities = () => {
   const [search, setSearch] = useState('')
@@ -137,13 +138,7 @@ const Activities = () => {
 
       {isLoading ? (
         <div className='text-center'>
-          <Loader
-            type='ThreeDots'
-            color='#00BFFF'
-            height={100}
-            width={100}
-            timeout={3000} //3 secs
-          />
+          <Spinner />
         </div>
       ) : isError ? (
         <Message variant='danger'>{error}</Message>

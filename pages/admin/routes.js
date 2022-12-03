@@ -3,7 +3,7 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import withAuth from '../../HOC/withAuth'
 import Message from '../../components/Message'
-import Loader from 'react-loader-spinner'
+
 import {
   FaCheckCircle,
   FaEdit,
@@ -19,6 +19,7 @@ import { confirmAlert } from 'react-confirm-alert'
 import { Confirm } from '../../components/Confirm'
 import { useForm } from 'react-hook-form'
 import { inputCheckBox, inputText } from '../../utils/dynamicForm'
+import Spinner from '../../components/Spinner'
 
 const Route = () => {
   const {
@@ -167,13 +168,7 @@ const Route = () => {
             <div className='modal-body'>
               {isLoading ? (
                 <div className='text-center'>
-                  <Loader
-                    type='ThreeDots'
-                    color='#00BFFF'
-                    height={100}
-                    width={100}
-                    timeout={3000} //3 secs
-                  />
+                  <Spinner />
                 </div>
               ) : isError ? (
                 <Message variant='danger'>{error}</Message>
@@ -236,13 +231,7 @@ const Route = () => {
 
       {isLoading ? (
         <div className='text-center'>
-          <Loader
-            type='ThreeDots'
-            color='#00BFFF'
-            height={100}
-            width={100}
-            timeout={3000} //3 secs
-          />
+          <Spinner />
         </div>
       ) : isError ? (
         <Message variant='danger'>{error}</Message>

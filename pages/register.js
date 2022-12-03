@@ -92,8 +92,12 @@ const Register = () => {
             )}
           </button>
 
-          <Link href='/login' type='submit'>
-            <a className='btn btn-primary form-control ms-2'>Login</a>
+          <Link
+            href='/login'
+            type='submit'
+            className='btn btn-primary form-control ms-2'
+          >
+            Login
           </Link>
         </div>
       </form>

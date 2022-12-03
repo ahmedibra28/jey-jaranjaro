@@ -7,26 +7,30 @@ import { generateToken } from '../../../utils/auth'
 const handler = nc()
 
 handler.post(async (req, res) => {
-  await dbConnect()
+  try {
+    await dbConnect()
 
-  const email = req.body.email.toLowerCase()
-  const password = req.body.password
+    const email = req.body.email.toLowerCase()
+    const password = req.body.password
 
-  const user = await User.findOne({ email })
-  if (user && (await user.matchPassword(password))) {
-    await UserLogon.create({
-      user: user._id,
-    })
+    const user = await User.findOne({ email })
+    if (user && (await user.matchPassword(password))) {
+      await UserLogon.create({
+        user: user._id,
+      })
 
-    return res.send({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      group: user.group,
-      token: generateToken(user._id),
-    })
-  } else {
-    return res.status(401).send('Invalid email or password')
+      return res.send({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        group: user.group,
+        token: generateToken(user._id),
+      })
+    } else {
+      return res.status(401).send('Invalid email or password')
+    }
+  } catch (error) {
+    return res.status(401).json(error?.message)
   }
 })
 

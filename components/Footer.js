@@ -7,8 +7,8 @@ const Footer = () => {
         <div className='row'>
           <div className='col text-center py-3'>
             Copyright &copy;{' '}
-            <a href=' https://websom.dev' target='blank'>
-              websom.dev
+            <a href=' https://ahmedibra.com' target='blank'>
+              ahmedibra.com
             </a>
           </div>
         </div>

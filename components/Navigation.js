@@ -38,73 +38,64 @@ const Navigation = () => {
         {userInfo ? (
           <>
             <li className='nav-item'>
-              <Link href='/'>
-                <a className='btn p-3' aria-current='page'>
-                  <FaHome className='text-primary fs-4' />
-                </a>
+              <Link href='/' className='btn p-3' aria-current='page'>
+                <FaHome className='text-primary fs-4' />
               </Link>
             </li>
             <li className='nav-item'>
-              <Link href='/orders/receipt'>
-                <a className='btn p-3' aria-current='page'>
-                  <FaDollarSign className='text-primary fs-4' />
-                </a>
+              <Link
+                href='/orders/receipt'
+                className='btn p-3'
+                aria-current='page'
+              >
+                <FaDollarSign className='text-primary fs-4' />
               </Link>
             </li>
             <li className='nav-item'>
-              <Link href='/transactions'>
-                <a className='btn p-3' aria-current='page'>
-                  <FaChartPie className='text-primary fs-4' />
-                </a>
+              <Link
+                href='/transactions'
+                className='btn p-3'
+                aria-current='page'
+              >
+                <FaChartPie className='text-primary fs-4' />
               </Link>
             </li>
             <li className='nav-item'>
-              <Link href='/expenses'>
-                <a className='btn p-3' aria-current='page'>
-                  <FaHandHoldingUsd className='text-primary fs-4' />
-                </a>
+              <Link href='/expenses' className='btn p-3' aria-current='page'>
+                <FaHandHoldingUsd className='text-primary fs-4' />
               </Link>
             </li>
             {/* <li className='nav-item'>
-          <Link href='/admin/users'>
-            <a className='btn p-3' aria-current='page'>
+          <Link href='/admin/users' className='btn p-3' aria-current='page'>
               <FaUserCog className='text-primary fs-4' />
-            </a>
           </Link>
         </li> */}
             <li className='nav-item'>
-              <Link href='/profile'>
-                <a className='btn p-3' aria-current='page'>
-                  <FaUserCircle className='text-primary fs-4' />
-                </a>
+              <Link href='/profile' className='btn p-3' aria-current='page'>
+                <FaUserCircle className='text-primary fs-4' />
               </Link>
             </li>
             <li className='nav-item'>
-              <Link href='/'>
-                <a
-                  className='btn p-3'
-                  aria-current='page'
-                  onClick={logoutHandler}
-                >
-                  <FaPowerOff className='text-primary fs-4' />
-                </a>
+              <Link
+                href='/'
+                className='btn p-3'
+                aria-current='page'
+                onClick={logoutHandler}
+              >
+                <FaPowerOff className='text-primary fs-4' />
               </Link>
             </li>
           </>
         ) : (
           <>
             <li className='nav-item'>
-              <Link href='/'>
-                <a className='btn p-3' aria-current='page'>
-                  <FaHome className='text-primary fs-4' />
-                </a>
+              <Link href='/' className='btn p-3' aria-current='page'>
+                <FaHome className='text-primary fs-4' />
               </Link>
             </li>
             <li className='nav-item'>
-              <Link href='/login'>
-                <a className='btn p-3' aria-current='page'>
-                  <FaPowerOff className='text-primary fs-4' />
-                </a>
+              <Link href='/login' className='btn p-3' aria-current='page'>
+                <FaPowerOff className='text-primary fs-4' />
               </Link>
             </li>
           </>

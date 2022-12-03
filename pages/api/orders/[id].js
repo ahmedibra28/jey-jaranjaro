@@ -2,12 +2,9 @@ import nc from 'next-connect'
 import dbConnect from '../../../utils/db'
 import Order from '../../../models/Order'
 import { isAuth } from '../../../utils/auth'
-import fileUpload from 'express-fileupload'
 import { upload, deleteFile } from '../../../utils/fileManager'
-export const config = { api: { bodyParser: false } }
 
 const handler = nc()
-handler.use(fileUpload())
 handler.use(isAuth)
 
 handler.put(async (req, res) => {
@@ -17,10 +14,6 @@ handler.put(async (req, res) => {
   const orderItems = JSON.parse(inputFields)
   const _id = req.query.id
 
-  const files = req.files
-    ? (!Array.isArray(req.files.file) && [req.files.file]) || req.files.file
-    : []
-
   if (orderItems && orderItems.length < 1) {
     return res.status(400).send('Please add items in this order')
   }
@@ -28,37 +21,9 @@ handler.put(async (req, res) => {
   const obj = await Order.findById(_id)
 
   if (obj) {
-    const uploadFiles = (files) => {
-      const promises = files.map((file) => {
-        return upload({
-          fileName: file,
-          fileType: 'image',
-          pathName: 'designs',
-        })
-      })
-      return Promise.all(promises)
-    }
-
-    if (files.length > 0) {
-      const uploadedFiles = await uploadFiles(files)
-
-      if (obj.files.length > 0) {
-        const files = [...obj.files, ...uploadedFiles]
-        obj.files = files
-        obj.fullName = fullName
-        obj.mobileNumber = mobileNumber
-        obj.orderItems = orderItems
-      } else {
-        obj.files = uploadedFiles
-        obj.fullName = fullName
-        obj.mobileNumber = mobileNumber
-        obj.orderItems = orderItems
-      }
-    } else {
-      obj.fullName = fullName
-      obj.mobileNumber = mobileNumber
-      obj.orderItems = orderItems
-    }
+    obj.fullName = fullName
+    obj.mobileNumber = mobileNumber
+    obj.orderItems = orderItems
 
     const updateObj = await obj.save()
     if (updateObj) {

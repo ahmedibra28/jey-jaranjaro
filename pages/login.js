@@ -72,23 +72,27 @@ const Login = () => {
             )}
           </button>
 
-          <Link href='/register' type='submit'>
-            <a className='btn btn-primary form-control ms-2'>Register</a>
+          <Link
+            href='/register'
+            type='submit'
+            className='btn btn-primary form-control ms-2'
+          >
+            Register
           </Link>
         </div>
       </form>
       <div className='row pt-3 forgot'>
         <div className='col-12'>
-          <Link href='/forgot'>
-            <a className='ps-1 text-decoration-none '> Forgot Password?</a>
+          <Link href='/forgot' className='ps-1 text-decoration-none '>
+            Forgot Password?
           </Link>
         </div>
       </div>
       <div className='row mt-5'>
         <div className='col-lg-4 col-md-6 col-12 mx-auto text-center'>
-          <a href='https://www.websom.dev' target='_blank' rel='noreferrer'>
+          <a href='https://www.ahmedibra.com' target='_blank' rel='noreferrer'>
             {/*  eslint-disable-next-line @next/next/no-img-element */}
-            <img src='/logo.png' className='img-fluid w-50' alt='logo' />
+            <img src='/logo.png' className='img-fluid w-25' alt='logo' />
           </a>
         </div>
 

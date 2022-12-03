@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import '../styles/globals.scss'
 import '../styles/bootstrap.min.scss'
 // import 'bootstrap/dist/css/bootstrap.css'
-import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
+// import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import Layout from '../components/Layout'
 
 import { QueryClient, QueryClientProvider } from 'react-query'

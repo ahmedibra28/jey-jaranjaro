@@ -3,13 +3,14 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import withAuth from '../../HOC/withAuth'
 import Message from '../../components/Message'
-import Loader from 'react-loader-spinner'
+
 import { receiptOrder, updateReceipt } from '../../api/orders'
 import { useMutation, useQueryClient } from 'react-query'
 import moment from 'moment'
 import { FaDollarSign, FaInfoCircle, FaSearch } from 'react-icons/fa'
 import { useForm } from 'react-hook-form'
 import { inputNumber } from '../../utils/dynamicForm'
+import Spinner from '../../components/Spinner'
 
 const Receipt = () => {
   const [receipt, setReceipt] = useState('')
@@ -190,13 +191,7 @@ const Receipt = () => {
             <div className='modal-body'>
               {isLoadingReceipt ? (
                 <div className='text-center'>
-                  <Loader
-                    type='ThreeDots'
-                    color='#00BFFF'
-                    height={100}
-                    width={100}
-                    timeout={3000} //3 secs
-                  />
+                  <Spinner />
                 </div>
               ) : isErrorReceipt ? (
                 <Message variant='danger'>{errorReceipt}</Message>
@@ -259,13 +254,7 @@ const Receipt = () => {
 
       {isLoadingReceipt ? (
         <div className='text-center'>
-          <Loader
-            type='ThreeDots'
-            color='#00BFFF'
-            height={100}
-            width={100}
-            timeout={3000} //3 secs
-          />
+          <Spinner />
         </div>
       ) : isErrorReceipt ? (
         <Message variant='danger'>{errorReceipt}</Message>
@@ -337,13 +326,11 @@ const Receipt = () => {
                     )}
 
                     <Link href={`/orders/${order._id}`}>
-                      <a>
-                        <FaInfoCircle
-                          onClick={() => editHandler(order)}
-                          className='me-1 text-primary fs-2 position-absolute'
-                          style={{ bottom: '5', left: '30' }}
-                        />
-                      </a>
+                      <FaInfoCircle
+                        onClick={() => editHandler(order)}
+                        className='me-1 text-primary fs-2 position-absolute'
+                        style={{ bottom: '5', left: '30' }}
+                      />
                     </Link>
                   </div>
                 </div>

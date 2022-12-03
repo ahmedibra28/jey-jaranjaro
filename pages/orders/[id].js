@@ -3,10 +3,11 @@ import { useRouter } from 'next/router'
 import { getOrderDetail } from '../../api/orders'
 import { useQuery } from 'react-query'
 import Message from '../../components/Message'
-import Loader from 'react-loader-spinner'
+
 import moment from 'moment'
 import { FaArrowCircleLeft, FaPrint } from 'react-icons/fa'
 import { useReactToPrint } from 'react-to-print'
+import Spinner from '../../components/Spinner'
 
 const Detail = () => {
   const router = useRouter()
@@ -31,13 +32,7 @@ const Detail = () => {
     <div>
       {isLoading ? (
         <div className='text-center'>
-          <Loader
-            type='ThreeDots'
-            color='#00BFFF'
-            height={100}
-            width={100}
-            timeout={3000} //3 secs
-          />
+          <Spinner />
         </div>
       ) : isError ? (
         <Message variant='danger'>{error}</Message>
