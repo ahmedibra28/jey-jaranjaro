@@ -1,6 +1,6 @@
 {
-  "name": "jey-jaran-jaro",
-  "version": "0.1.0",
+  "name": "jey-jaranjaro",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -15,7 +15,6 @@
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.2.3",
     "crypto": "^1.0.1",
-    "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
